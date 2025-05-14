@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 34 30% 95%;
+    --foreground: 20 10% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 20 10% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 10% 10%;
+
+    --primary: 30 25% 25%;
+    --primary-foreground: 30 25% 95%;
+
+    --secondary: 30 15% 90%;
+    --secondary-foreground: 30 25% 25%;
+
+    --muted: 30 15% 90%;
+    --muted-foreground: 30 10% 40%;
+
+    --accent: 30 25% 85%;
+    --accent-foreground: 30 25% 25%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 30 25% 95%;
+
+    --border: 30 15% 80%;
+    --input: 30 15% 80%;
+    --ring: 30 25% 50%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: "Montserrat", sans-serif;
+  }
+
+  .luxury-button {
+    @apply bg-luxury-gold-medium text-luxury-black font-medium px-6 py-2 rounded transition-all duration-300 hover:bg-luxury-gold-dark;
+  }
+
+  .luxury-button-secondary {
+    @apply bg-luxury-brown-light text-luxury-black font-medium px-6 py-2 rounded transition-all duration-300 hover:bg-luxury-brown-medium;
+  }
+  
+  .luxury-input {
+    @apply bg-white border-2 border-luxury-brown-light rounded px-4 py-2 focus:outline-none focus:border-luxury-gold-medium transition-all;
+  }
+  
+  .luxury-card {
+    @apply bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg;
+  }
+}
