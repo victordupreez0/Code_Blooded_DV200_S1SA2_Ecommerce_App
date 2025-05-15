@@ -14,7 +14,9 @@ const Navbar: React.FC = () => {
               <span className="text-luxury-gold-dark font-serif text-2xl font-bold">Billionares</span>
             </Link>
           </div>
-          <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
+
+
+          <div className="hidden sm:ml-6 sm:flex sm:space-x-8 mt-4">
             <Link to="/" className="border-transparent text-luxury-black hover:text-luxury-brown-dark px-1 pt-1 font-medium">
               Home
             </Link>
@@ -28,6 +30,7 @@ const Navbar: React.FC = () => {
               Link 3
             </Link>
           </div>
+          
           <div className="flex items-center">
             <Link to="/login" className="text-luxury-black hover:text-luxury-brown-dark font-medium mr-4">
               Sign In
