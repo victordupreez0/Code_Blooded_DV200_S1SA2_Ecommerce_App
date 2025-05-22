@@ -1,0 +1,31 @@
+GET http://localhost:3000/products
+
+###
+
+GET http://localhost:3000/products/682dafb6a0393e8a687586db
+
+###
+
+POST http://localhost:3000/products
+Content-Type: application/json
+
+{
+"name": "Product 12",
+"price": 100,
+"description": "This is a product"
+}
+
+###
+
+DELETE http://localhost:3000/products/682db148e59dc3f8a505e3a3
+
+###
+
+PATCH http://localhost:3000/products/682da96d5741d1337b1b8def
+Content-Type: application/json
+
+{
+    "name": "New Name",
+    "price": 200,
+    "description": "New Description"
+}
