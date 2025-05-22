@@ -115,13 +115,14 @@ const Login: React.FC = () => {
             </div>
 
             <div>
+              <Link to="/postLogin">
               <button
                 type="submit"
-                className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-luxury-black hover:bg-luxury-brown-darker focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-luxury-gold-dark transition-colors"
-              >
+                className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-luxury-black hover:bg-luxury-brown-darker focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-luxury-gold-dark transition-colors">
                 Sign in
                 <ArrowRight className="ml-2 h-4 w-4" />
               </button>
+              </Link>
             </div>
           </form>
 
