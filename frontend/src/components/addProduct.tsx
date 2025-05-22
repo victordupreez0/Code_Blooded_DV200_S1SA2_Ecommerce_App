@@ -170,10 +170,19 @@ function AddProduct() {
                       key={product._id}
                       className="flex justify-between items-center p-4 bg-white rounded shadow"
                     >
-                      <div>
-                        <span className="font-semibold">{product.name}</span>
-                        <span className="ml-2 text-gray-600">${product.price}</span>
-                        <div className="text-sm text-gray-500">{product.description}</div>
+                      <div className="flex items-center gap-4">
+                        {product.imageUrl && (
+                          <img
+                            src={`http://localhost:3000${product.imageUrl}`}
+                            alt={product.name}
+                            className="w-16 h-16 object-cover rounded border"
+                          />
+                        )}
+                        <div>
+                          <span className="font-semibold">{product.name}</span>
+                          <span className="ml-2 text-gray-600">${product.price}</span>
+                          <div className="text-sm text-gray-500">{product.description}</div>
+                        </div>
                       </div>
                       <button
                         className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"

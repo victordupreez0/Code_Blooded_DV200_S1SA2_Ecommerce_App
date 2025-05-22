@@ -40,12 +40,15 @@ router.get ('/:id', getProduct, (req, res) => {
 
 // Creating a Product (with image upload)
 router.post ('/', upload.single('image'), async (req, res) => {
-   const imageUrl = req.file ? `/uploads/${req.file.filename}` : req.body.imageUrl;
+   let imageUrl = req.body.imageUrl;
+   if (req.file) {
+     imageUrl = `/uploads/${req.file.filename}`;
+   }
    const product = new Product ({
     name: req.body.name,
     price: req.body.price,
     description: req.body.description,
-    imageUrl: imageUrl
+    imageUrl: imageUrl // Always save the imageUrl to the database
    })
 
    try{
