@@ -33,7 +33,7 @@ function AddProduct() {
       if (form.image) {
         formData.append('image', form.image);
       }
-      const res = await axios.post('http://localhost:3000/products', formData, {
+      await axios.post('http://localhost:3000/products', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -78,86 +78,109 @@ function AddProduct() {
   );
 
   return (
-    <div className="container mt-5">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2>{view === 'add' ? 'Add Product' : 'View/Search Products'}</h2>
-        <button className="btn btn-secondary" onClick={() => setView(view === 'add' ? 'view' : 'add')}>
+    <div className="max-w-5xl mx-auto mt-10">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
+        <h2 className="text-2xl font-bold">{view === 'add' ? 'Add Product' : 'View/Search Products'}</h2>
+        <button
+          className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800 transition"
+          onClick={() => setView(view === 'add' ? 'view' : 'add')}
+        >
           {view === 'add' ? 'View/Search Products' : 'Add Product'}
         </button>
       </div>
-      <div className="row">
-        <div className="col-md-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div>
           {view === 'add' && (
-            <form onSubmit={handleSubmit} className="mt-4" encType="multipart/form-data">
-              <div className="mb-3">
-                <label className="form-label">Name</label>
+            <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded shadow" encType="multipart/form-data">
+              <div>
+                <label className="block mb-1 font-medium">Name</label>
                 <input
                   type="text"
-                  className="form-control"
+                  className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   name="name"
                   value={form.name}
                   onChange={handleChange}
                   required
                 />
               </div>
-              <div className="mb-3">
-                <label className="form-label">Price</label>
+              <div>
+                <label className="block mb-1 font-medium">Price</label>
                 <input
                   type="number"
-                  className="form-control"
+                  className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   name="price"
                   value={form.price}
                   onChange={handleChange}
                   required
                 />
               </div>
-              <div className="mb-3">
-                <label className="form-label">Description</label>
+              <div>
+                <label className="block mb-1 font-medium">Description</label>
                 <textarea
-                  className="form-control"
+                  className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   name="description"
                   value={form.description}
                   onChange={handleChange}
                   required
                 />
               </div>
-              <div className="mb-3">
-                <label className="form-label">Image</label>
+              <div>
+                <label className="block mb-1 font-medium">Image</label>
                 <input
                   type="file"
-                  className="form-control"
+                  className="w-full border border-gray-300 rounded px-3 py-2"
                   name="image"
                   accept="image/*"
                   onChange={handleChange}
                 />
               </div>
-              <button type="submit" className="btn btn-primary">Add Product</button>
+              <button
+                type="submit"
+                className="w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+              >
+                Add Product
+              </button>
             </form>
           )}
-          {message && <div className="alert alert-info mt-3">{message}</div>}
+          {message && (
+            <div className="mt-4 p-3 rounded bg-blue-100 text-blue-800 border border-blue-300">
+              {message}
+            </div>
+          )}
         </div>
-        <div className="col-md-6">
+        <div>
           {view === 'view' && (
             <div>
               <input
                 type="text"
-                className="form-control mb-3"
+                className="w-full mb-4 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Search products..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
               />
               {loading ? (
-                <div>Loading...</div>
+                <div className="text-center text-gray-500">Loading...</div>
               ) : (
-                <ul className="list-group">
-                  {filteredProducts.length === 0 && <li className="list-group-item">No products found.</li>}
+                <ul className="space-y-3">
+                  {filteredProducts.length === 0 && (
+                    <li className="p-4 bg-gray-100 rounded text-center text-gray-500">No products found.</li>
+                  )}
                   {filteredProducts.map(product => (
-                    <li key={product._id} className="list-group-item d-flex justify-content-between align-items-center">
+                    <li
+                      key={product._id}
+                      className="flex justify-between items-center p-4 bg-white rounded shadow"
+                    >
                       <div>
-                        <strong>{product.name}</strong> (${product.price})<br />
-                        <small>{product.description}</small>
+                        <span className="font-semibold">{product.name}</span>
+                        <span className="ml-2 text-gray-600">${product.price}</span>
+                        <div className="text-sm text-gray-500">{product.description}</div>
                       </div>
-                      <button className="btn btn-danger btn-sm" onClick={() => handleDelete(product._id)}>Delete</button>
+                      <button
+                        className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"
+                        onClick={() => handleDelete(product._id)}
+                      >
+                        Delete
+                      </button>
                     </li>
                   ))}
                 </ul>
