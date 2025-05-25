@@ -183,9 +183,9 @@ function AddProduct() {
     className="flex justify-between items-center p-4 bg-white rounded shadow"
   >
     <div className="flex items-center">
-      {product.image ? (
+      {product.imageUrl ? (
         <img
-          src={`http://localhost:3000/uploads/${product.image}`}
+       src={`http://localhost:3000${product.imageUrl}`}
           alt={product.name}
           className="w-16 h-16 object-cover rounded mr-4"
           onError={e => { e.currentTarget.src = '/fallback-image.jpg'; }}
@@ -207,6 +207,7 @@ function AddProduct() {
     </button>
   </li>
 ))}
+
                 </ul>
               )}
             </div>
