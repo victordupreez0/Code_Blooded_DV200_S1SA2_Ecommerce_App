@@ -36,7 +36,7 @@ function AddProduct() {
       const response = await axios.post('http://localhost:3000/products', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: 'Bearer ${locatalStorage.getItem("token")}',
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       setMessage('Product created!');
@@ -72,7 +72,11 @@ function AddProduct() {
   // Delete product
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/products/${id}`);
+      await axios.delete(`http://localhost:3000/products/${id}`,{
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`, // Add auth
+      },
+    });
       setProducts(products.filter(p => p._id !== id));
     } catch (err) {
       setMessage('Error deleting product');
@@ -173,24 +177,36 @@ function AddProduct() {
                   {filteredProducts.length === 0 && (
                     <li className="p-4 bg-gray-100 rounded text-center text-gray-500">No products found.</li>
                   )}
-                  {filteredProducts.map(product => (
-                    <li
-                      key={product._id}
-                      className="flex justify-between items-center p-4 bg-white rounded shadow"
-                    >
-                      <div>
-                        <span className="font-semibold">{product.name}</span>
-                        <span className="ml-2 text-gray-600">${product.price}</span>
-                        <div className="text-sm text-gray-500">{product.description}</div>
-                      </div>
-                      <button
-                        className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"
-                        onClick={() => handleDelete(product._id)}
-                      >
-                        Delete
-                      </button>
-                    </li>
-                  ))}
+            {filteredProducts.map(product => (
+  <li
+    key={product._id}
+    className="flex justify-between items-center p-4 bg-white rounded shadow"
+  >
+    <div className="flex items-center">
+      {product.image ? (
+        <img
+          src={`http://localhost:3000/uploads/${product.image}`}
+          alt={product.name}
+          className="w-16 h-16 object-cover rounded mr-4"
+          onError={e => { e.currentTarget.src = '/fallback-image.jpg'; }}
+        />
+      ) : (
+        <div className="w-16 h-16 bg-gray-200 rounded mr-4" />
+      )}
+      <div>
+        <span className="font-semibold">{product.name}</span>
+        <span className="ml-2 text-gray-600">${product.price}</span>
+        <div className="text-sm text-gray-500">{product.description}</div>
+      </div>
+    </div>
+    <button
+      className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"
+      onClick={() => handleDelete(product._id)}
+    >
+      Delete
+    </button>
+  </li>
+))}
                 </ul>
               )}
             </div>
