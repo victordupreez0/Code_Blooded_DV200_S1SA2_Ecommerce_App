@@ -33,15 +33,18 @@ function AddProduct() {
       if (form.image) {
         formData.append('image', form.image);
       }
-      await axios.post('http://localhost:3000/products', formData, {
+      const response = await axios.post('http://localhost:3000/products', formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+          'Content-Type': 'multipart/form-data',
+          Authorization: 'Bearer ${locatalStorage.getItem("token")}',
+        },
       });
       setMessage('Product created!');
       setForm({ name: '', price: '', description: '', image: null });
+      if(view === 'view') fetchProducts();
     } catch (err) {
-      setMessage('Error creating product');
+      console.error('Product creation error:',err.response?.data, err.message);
+      setMessage(err.response?.data?.message || 'Errror creating product');
     }
   };
 
@@ -49,9 +52,14 @@ function AddProduct() {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:3000/products');
+      const res = await axios.get('http://localhost:3000/products', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
       setProducts(res.data);
     } catch (err) {
+      console.error('Fetch products error:', err.response?.data, err.message);
       setMessage('Error fetching products');
     }
     setLoading(false);

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Eye, EyeOff, Check } from 'lucide-react';
 import { useToast } from '../hooks/use-toast.ts';
+import axios from 'axios';
 
 const Register: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -28,7 +29,7 @@ const Register: React.FC = () => {
     return regex.test(password);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     const { fullName, email, password, confirmPassword } = formData;
@@ -60,10 +61,29 @@ const Register: React.FC = () => {
       return;
     }
 
+    try {
+      const response = await axios.post('http://localhost:3000/auth/register',{
+        fullName,
+        email,
+        password,
+      });
+    
+
     toast({
       title: "Success",
       description: "Account created successfully. Redirecting to login...",
     });
+    setTimeout(() => {
+      window.location.href = '/login';
+    }, 2000);
+    } catch (err) {
+      toast({
+        title: "Error",
+        description: err.response?.data?.message || "Registration failed",
+        variant: "destructive",
+      });
+      return;
+    }
 
     console.log('Registration attempt with:', { fullName, email });
     // Redirect would happen here after registration

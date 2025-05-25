@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '../hooks/use-toast.ts';
+import axios from 'axios';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -9,27 +10,41 @@ const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically handle the login logic
-    
-    if (!email || !password) {
+    if(!email || !password){
       toast({
         title: "Error",
         description: "Please fill in all fields",
         variant: "destructive",
+
       });
       return;
     }
 
-    toast({
-      title: "Success",
-      description: "Login successful. Redirecting...",
-    });
-
-    console.log('Login attempt with:', { email, password });
-    // Redirect would happen here after authentication
+    try {
+      const response = await axios.post('http://localhost:3000/auth/login',{
+        email,
+        password,
+      });
+      if (response.data.token){
+        localStorage.setItem('token', response.data.token);
+        toast({
+          title: "Success",
+          description: "Login successful. Redirecting...",
+        });
+        window.location.href = '/postLogin';
+      }
+    } catch(err){
+      toast({
+        title: "Error",
+        description: err.response?.data?.message || "Invalid credentials",
+        variant: "destructive",
+      });
+    }
   };
+
 
   return (
     <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gradient-to-b from-luxury-brown-light/50 to-white">
