@@ -19,12 +19,5 @@ const ProductSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    imageUrl: {
-        type: String,
-        required: true // Not all products must have an image
-    },
-    comments: [CommentSchema]
-});
 
 module.exports = mongoose.model('Product', ProductSchema);
-
