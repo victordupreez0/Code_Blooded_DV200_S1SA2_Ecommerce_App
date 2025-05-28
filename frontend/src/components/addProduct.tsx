@@ -31,22 +31,17 @@ function AddProduct() {
       formData.append('price', form.price);
       formData.append('description', form.description);
       if (form.image) {
-        console.log('Uploading image:', form.image.name, form.image.size); // Debug log
         formData.append('image', form.image);
       }
-      console.log('Sending POST request to /api/products'); // Debug log
-      const response = await axios.post('http://localhost:3000/api/products', formData, {
+      await axios.post('http://localhost:3000/products', formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+          'Content-Type': 'multipart/form-data'
+        }
       });
       setMessage('Product created!');
       setForm({ name: '', price: '', description: '', image: null });
-      if(view === 'view') fetchProducts();
     } catch (err) {
-      console.error('Product creation error:',err.response?.data, err.message);
-      setMessage(err.response?.data?.message || 'Errror creating product');
+      setMessage('Error creating product');
     }
   };
 
@@ -54,14 +49,9 @@ function AddProduct() {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:3000/api/products', {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
+      const res = await axios.get('http://localhost:3000/products');
       setProducts(res.data);
     } catch (err) {
-      console.error('Fetch products error:', err.response?.data, err.message);
       setMessage('Error fetching products');
     }
     setLoading(false);
@@ -74,11 +64,7 @@ function AddProduct() {
   // Delete product
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/api/products/${id}`,{
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`, // Add auth
-      },
-    });
+      await axios.delete(`http://localhost:3000/products/${id}`);
       setProducts(products.filter(p => p._id !== id));
     } catch (err) {
       setMessage('Error deleting product');
@@ -187,6 +173,37 @@ function AddProduct() {
                   {filteredProducts.length === 0 && (
                     <li className="p-4 bg-gray-100 rounded text-center text-gray-500">No products found.</li>
                   )}
+                  {filteredProducts.map(product => (
+                    <li
+                      key={product._id}
+                      className="flex justify-between items-center p-4 bg-white rounded shadow cursor-pointer hover:bg-gray-100 transition"
+                      onClick={() => window.location.href = `/product/${product._id}`}
+                    >
+                      <div className="flex items-center gap-4">
+                        {product.imageUrl && (
+                          <img
+                            src={`http://localhost:3000${product.imageUrl}`}
+                            alt={product.name}
+                            className="w-16 h-16 object-cover rounded border"
+                          />
+                        )}
+                        <div>
+                          <span className="font-semibold">{product.name}</span>
+                          <span className="ml-2 text-gray-600">${product.price}</span>
+                          <div className="text-sm text-gray-500">{product.description}</div>
+                        </div>
+                      </div>
+                      <div className="flex gap-2" onClick={e => e.stopPropagation()}>
+                        <button
+                          className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"
+                          onClick={() => handleDelete(product._id)}
+                          tabIndex={0}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </li>
+                  ))}
                 </ul>
               )}
             </div>
