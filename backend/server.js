@@ -13,14 +13,13 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
 app.use(express.json())
 app.use(cors());
 
-// Serve static files from uploads folder
+app.use('/auth', require('./routes/auth'));
+
+const productsRouter = require('./routes/products.js');
+app.use('/api/products', productsRouter);
+app.use('/api/auth', authRouter);
+
+app.listen(3000, () => console.log('server started on port 3000'));
+
+
 app.use('/uploads', express.static('uploads'));
-
-const productsRouter = require('./routes/products.js')
-app.use('/products', productsRouter)
-
-
-app.listen(3000, () => console.log('Server Started'))
-
-
-app.use('/auth', authRouter);

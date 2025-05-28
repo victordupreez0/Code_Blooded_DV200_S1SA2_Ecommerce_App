@@ -13,11 +13,10 @@ const ProductSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    imageUrl: {
-        type: String,
-        required: false // Not all products must have an image
+    image: {
+       data: Buffer,
+       contentType: String
     }
-})
+});
 
 module.exports = mongoose.model('Product', ProductSchema);
-

@@ -31,9 +31,11 @@ function AddProduct() {
       formData.append('price', form.price);
       formData.append('description', form.description);
       if (form.image) {
+        console.log('Uploading image:', form.image.name, form.image.size); // Debug log
         formData.append('image', form.image);
       }
-      const response = await axios.post('http://localhost:3000/products', formData, {
+      console.log('Sending POST request to /api/products'); // Debug log
+      const response = await axios.post('http://localhost:3000/api/products', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -52,7 +54,7 @@ function AddProduct() {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:3000/products', {
+      const res = await axios.get('http://localhost:3000/api/products', {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
@@ -72,7 +74,7 @@ function AddProduct() {
   // Delete product
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/products/${id}`,{
+      await axios.delete(`http://localhost:3000/api/products/${id}`,{
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`, // Add auth
       },
@@ -183,16 +185,12 @@ function AddProduct() {
     className="flex justify-between items-center p-4 bg-white rounded shadow"
   >
     <div className="flex items-center">
-      {product.imageUrl ? (
-        <img
-       src={`http://localhost:3000${product.imageUrl}`}
-          alt={product.name}
-          className="w-16 h-16 object-cover rounded mr-4"
-          onError={e => { e.currentTarget.src = '/fallback-image.jpg'; }}
-        />
-      ) : (
-        <div className="w-16 h-16 bg-gray-200 rounded mr-4" />
-      )}
+      <img
+        src={`http://localhost:3000/api/products/${product._id}/image`}
+        alt={product.name}
+        className="w-16 h-16 object-cover rounded mr-4"
+        onError={e => { (e.currentTarget as HTMLImageElement).src = '/fallback-image.jpg'; }}
+      />
       <div>
         <span className="font-semibold">{product.name}</span>
         <span className="ml-2 text-gray-600">${product.price}</span>
