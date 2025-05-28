@@ -1,3 +1,9 @@
+declare global {
+  interface Window {
+    google: any;
+  }
+}
+
 import React, { useState , useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Eye, EyeOff, Check } from 'lucide-react';
@@ -25,7 +31,7 @@ const Register: React.FC = () => {
     script.async = true;
     script.onload = () => {
      window.google.accounts.id.initialize({
-        client_id: '1069863257043-7uc9vbk8vfndlr91njcu214a36gg8odu.apps.googleusercontent.com', // Replace with your Client ID
+        client_id: '1069863257043-7uc9vbk8vfndlr91njcu214a36gg8odu.apps.googleusercontent.com', 
         callback: handleGoogleSignIn,
     });
 
@@ -36,7 +42,7 @@ const Register: React.FC = () => {
           size: 'large',
           text: 'signup_with',
           shape: 'rectangular',
-          width: 300,
+          width: 100,
         }
       );
     };

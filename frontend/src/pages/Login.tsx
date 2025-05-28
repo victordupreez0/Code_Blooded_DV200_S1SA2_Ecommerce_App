@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '../hooks/use-toast.ts';
@@ -44,6 +44,58 @@ const Login: React.FC = () => {
       });
     }
   };
+
+
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = "https://accounts.google.com/gsi/client";
+    script.async = true;
+    script.onload = () => {
+     window.google.accounts.id.initialize({
+        client_id: '1069863257043-7uc9vbk8vfndlr91njcu214a36gg8odu.apps.googleusercontent.com', // Replace with your Client ID
+        callback: handleGoogleSignIn,
+    });
+
+    window.google.accounts.id.renderButton(
+        document.getElementById('googleSignInButton'),
+        {
+          theme: 'outline',
+          size: 'large',
+          text: 'signup_with',
+          shape: 'rectangular',
+          width: 100,
+        }
+      );
+    };
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+
+  const handleGoogleSignIn = async (response: { credential: string }) => {
+    try{
+      const res = await axios.post('http://localhost:3000/auth/google', {
+        idToken: response.credential,
+      });
+      toast({
+        title: "Success",
+        description: "Google sign-in successful. Redirecting...",
+      });
+      localStorage.setItem('token', res.data.token);
+      setTimeout(() => {
+        window.location.href = '/postLogin';
+      }, 2000);
+    } catch (err) {
+      toast({
+        title: "Error",
+        description: err.response?.data?.message || "Google sign-in failed",
+        variant: "destructive",
+      });
+    }
+  };
+
 
 
   return (
@@ -149,12 +201,7 @@ const Login: React.FC = () => {
 
             <div className="mt-6 grid grid-cols-2 gap-3">
               <div>
-                <a
-                  href="#"
-                  className="w-full inline-flex justify-center py-2 px-4 border border-luxury-brown-light rounded-md shadow-sm bg-white text-sm font-medium text-luxury-black hover:bg-luxury-brown-light transition-colors"
-                >
-                  Google
-                </a>
+                <div id="googleSignInButton"></div>
               </div>
               <div>
                 <a
