@@ -2,7 +2,7 @@ GET http://localhost:3000/products
 
 ###
 
-GET http://localhost:3000/products/682dafb6a0393e8a687586db
+GET http://localhost:3000/products/682eee23369479db00e175fa
 
 ###
 
