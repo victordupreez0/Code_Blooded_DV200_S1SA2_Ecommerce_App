@@ -36,6 +36,7 @@ function AddProduct() {
       }
       console.log('Sending POST request to /api/products'); // Debug log
       const response = await axios.post('http://localhost:3000/api/products', formData, {
+        
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${localStorage.getItem("token")}`,

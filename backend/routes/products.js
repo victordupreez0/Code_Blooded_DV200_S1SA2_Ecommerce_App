@@ -49,19 +49,19 @@ router.get('/:id/image', getProduct, async (req, res) => {
 // Creating a Product (with image upload)
 router.post ('/', upload.single('image'), async (req, res) => {
     console.log('Received file:', req.file); // Debug log
-   const image = req.file ? `/uploads/${req.file.filename}` : req.body.imageUrl;
-   const product = new Product ({
-    name: req.body.name,
-    price: req.body.price,
-    description: req.body.description,
-    image : req.file
+    const image = req.file ? `/uploads/${req.file.filename}` : req.body.imageUrl;
+    const product = new Product ({
+        name: req.body.name,
+        price: Number(req.body.price), // Ensure price is a number
+        description: req.body.description,
+        image : req.file
 
-    ? {
-        data: req.file.buffer,
-        contentType: req.file.mimetype
-    } 
-    
-    : undefined
+        ? {
+            data: req.file.buffer,
+            contentType: req.file.mimetype
+        } 
+        
+        : undefined
 
 
    });
