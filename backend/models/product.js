@@ -1,5 +1,11 @@
 const mongoose = require('mongoose');
 
+const CommentSchema = new mongoose.Schema({
+    username: { type: String, required: true },
+    comment: { type: String, required: true },
+    hearts: { type: Number, default: 0 }
+}, { timestamps: true });
+
 const ProductSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -16,8 +22,9 @@ const ProductSchema = new mongoose.Schema({
     imageUrl: {
         type: String,
         required: true // Not all products must have an image
-    }
-})
+    },
+    comments: [CommentSchema]
+});
 
 module.exports = mongoose.model('Product', ProductSchema);
 
