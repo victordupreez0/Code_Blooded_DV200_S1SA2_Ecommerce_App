@@ -129,12 +129,20 @@ router.delete('/:id/comments/:commentId', async (req, res) => {
     try {
         const product = await Product.findById(req.params.id);
         if (!product) return res.status(404).json({ message: 'Product not found' });
+        // Debug logging
+        console.log('Attempting to delete commentId:', req.params.commentId);
+        console.log('Product comment IDs:', product.comments.map(c => c._id.toString()));
         const comment = product.comments.id(req.params.commentId);
-        if (!comment) return res.status(404).json({ message: 'Comment not found' });
-        comment.remove();
+        if (!comment) {
+            console.log('Comment not found for deletion');
+            return res.status(404).json({ message: 'Comment not found' });
+        }
+        // Remove the comment using pull
+        product.comments.pull({ _id: req.params.commentId });
         await product.save();
         res.json({ message: 'Comment deleted' });
     } catch (err) {
+        console.log('Error deleting comment:', err);
         res.status(400).json({ message: err.message });
     }
 });

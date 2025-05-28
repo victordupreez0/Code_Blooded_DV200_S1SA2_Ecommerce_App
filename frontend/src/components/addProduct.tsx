@@ -195,16 +195,6 @@ function AddProduct() {
                       </div>
                       <div className="flex gap-2" onClick={e => e.stopPropagation()}>
                         <button
-                          className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
-                          onClick={() => {
-                            setSelectedProduct(product);
-                            setShowCommentModal(true);
-                          }}
-                          tabIndex={0}
-                        >
-                          Comment
-                        </button>
-                        <button
                           className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"
                           onClick={() => handleDelete(product._id)}
                           tabIndex={0}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FiChevronDown, FiHeart } from "react-icons/fi";
+import { FiChevronDown, FiHeart, FiTrash2 } from "react-icons/fi";
 import axios from "axios";
 
 interface CommentSectionProps {
@@ -18,9 +18,9 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState<Comment[]>([]);
   const [loadingComments, setLoadingComments] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState<number | null>(null);
   const [editIdx, setEditIdx] = useState<number | null>(null);
   const [editComment, setEditComment] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -57,22 +57,29 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
   };
 
   const handleDelete = async (idx: number) => {
-    const commentId = comments[idx]._id;
+    const commentId = comments[idx]?._id;
+    if (!commentId) return;
     try {
       await axios.delete(
         `http://localhost:3000/products/${productId}/comments/${commentId}`
       );
-      setComments(comments.filter((_, i) => i !== idx));
-      setDropdownOpen(null);
-    } catch (err) {
-      // handle error
+      setComments((prev) => prev.filter((c) => c._id !== commentId));
+      // If editing, reset edit state if the deleted comment was being edited
+      if (editIdx === idx) {
+        setEditIdx(null);
+        setEditComment("");
+      }
+      setError(null);
+    } catch (err: any) {
+      setError(
+        err?.response?.data?.message || 'Failed to delete comment. Please try again.'
+      );
     }
   };
 
   const handleEdit = (idx: number) => {
     setEditIdx(idx);
     setEditComment(comments[idx].comment);
-    setDropdownOpen(null);
   };
 
   const handleEditSave = async (idx: number) => {
@@ -103,7 +110,6 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
       const updated = [...comments];
       updated[idx] = res.data;
       setComments(updated);
-      setDropdownOpen(null);
     } catch (err) {
       // handle error
     }
@@ -111,6 +117,11 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
 
   return (
     <div className="w-full h-full flex flex-col">
+      {error && (
+        <div className="bg-red-100 text-red-700 border border-red-300 rounded px-3 py-2 mb-2 text-sm">
+          {error}
+        </div>
+      )}
       <form onSubmit={handleSubmit} className="flex flex-col gap-2">
         <div className="relative flex items-start gap-2">
           <p className="username mt-2 text-gray-600 text-left">
@@ -186,37 +197,16 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
                     <FiHeart className="mr-1" /> {c.hearts}
                   </button>
                   <button
-                    className={`px-2 py-1 rounded hover:bg-gray-200 flex items-center transition-transform duration-200 ${
-                      dropdownOpen === idx ? "chevron-flip" : ""
-                    }`}
-                    onClick={() =>
-                      setDropdownOpen(dropdownOpen === idx ? null : idx)
-                    }
+                    className="text-red-500 hover:text-red-700"
+                    title="Delete"
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(idx);
+                    }}
                   >
-                    <FiChevronDown size={20} />
+                    <FiTrash2 />
                   </button>
-                  {dropdownOpen === idx && (
-                    <div className="dropdown-menu absolute right-0 top-8 bg-white border rounded shadow-md z-10">
-                      <button
-                        className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                        onClick={() => handleEdit(idx)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                        onClick={() => handleDelete(idx)}
-                      >
-                        Delete
-                      </button>
-                      <button
-                        className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                        onClick={() => handleReact(idx)}
-                      >
-                        React
-                      </button>
-                    </div>
-                  )}
                 </div>
               </li>
             ))}
