@@ -77,6 +77,14 @@ function AddProduct() {
     p.description.toLowerCase().includes(search.toLowerCase())
   );
 
+  function setShowCommentModal(arg0: boolean) {
+    throw new Error('Function not implemented.');
+  }
+
+  function setSelectedProduct(product: any) {
+    throw new Error('Function not implemented.');
+  }
+
   return (
     <div className="max-w-5xl mx-auto mt-10">
       <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
@@ -168,7 +176,8 @@ function AddProduct() {
                   {filteredProducts.map(product => (
                     <li
                       key={product._id}
-                      className="flex justify-between items-center p-4 bg-white rounded shadow"
+                      className="flex justify-between items-center p-4 bg-white rounded shadow cursor-pointer hover:bg-gray-100 transition"
+                      onClick={() => window.location.href = `/product/${product._id}`}
                     >
                       <div className="flex items-center gap-4">
                         {product.imageUrl && (
@@ -184,12 +193,25 @@ function AddProduct() {
                           <div className="text-sm text-gray-500">{product.description}</div>
                         </div>
                       </div>
-                      <button
-                        className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"
-                        onClick={() => handleDelete(product._id)}
-                      >
-                        Delete
-                      </button>
+                      <div className="flex gap-2" onClick={e => e.stopPropagation()}>
+                        <button
+                          className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                          onClick={() => {
+                            setSelectedProduct(product);
+                            setShowCommentModal(true);
+                          }}
+                          tabIndex={0}
+                        >
+                          Comment
+                        </button>
+                        <button
+                          className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"
+                          onClick={() => handleDelete(product._id)}
+                          tabIndex={0}
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </li>
                   ))}
                 </ul>
