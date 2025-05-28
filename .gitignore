@@ -1,0 +1,16 @@
+# Ignore node_modules in both backend and frontend
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# Ignore uploads and build output
+backend/uploads/
+dist/
+build/
+
+# Ignore logs
+*.log
+
+# Ignore OS files
+.DS_Store
+Thumbs.db

@@ -91,14 +91,6 @@ function AddProduct() {
     p.description.toLowerCase().includes(search.toLowerCase())
   );
 
-  function setShowCommentModal(arg0: boolean) {
-    throw new Error('Function not implemented.');
-  }
-
-  function setSelectedProduct(product: any) {
-    throw new Error('Function not implemented.');
-  }
-
   return (
     <div className="max-w-5xl mx-auto mt-10">
       <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
@@ -187,6 +179,33 @@ function AddProduct() {
                   {filteredProducts.length === 0 && (
                     <li className="p-4 bg-gray-100 rounded text-center text-gray-500">No products found.</li>
                   )}
+            {filteredProducts.map(product => (
+  <li
+    key={product._id}
+    className="flex justify-between items-center p-4 bg-white rounded shadow"
+  >
+    <div className="flex items-center">
+      <img
+        src={`http://localhost:3000/api/products/${product._id}/image`}
+        alt={product.name}
+        className="w-16 h-16 object-cover rounded mr-4"
+        onError={e => { (e.currentTarget as HTMLImageElement).src = '/fallback-image.jpg'; }}
+      />
+      <div>
+        <span className="font-semibold">{product.name}</span>
+        <span className="ml-2 text-gray-600">${product.price}</span>
+        <div className="text-sm text-gray-500">{product.description}</div>
+      </div>
+    </div>
+    <button
+      className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"
+      onClick={() => handleDelete(product._id)}
+    >
+      Delete
+    </button>
+  </li>
+))}
+
                 </ul>
               )}
             </div>
@@ -197,4 +216,4 @@ function AddProduct() {
   );
 }
 
-export default AddProduct;
+export default AddProduct;//

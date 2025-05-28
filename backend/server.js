@@ -22,4 +22,4 @@ app.use('/api/auth', authRouter);
 app.listen(3000, () => console.log('server started on port 3000'));
 
 
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static('uploads'));//
