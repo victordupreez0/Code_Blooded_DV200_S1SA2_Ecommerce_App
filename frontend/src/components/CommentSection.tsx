@@ -8,13 +8,31 @@ interface CommentSectionProps {
 
 interface Comment {
   _id: string;
+  userId: string;
   username: string;
   comment: string;
   hearts: number;
 }
 
 const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
-  const [username] = useState("user"); // Replace with actual user logic if needed
+  const [username] = useState(() => {
+    try {
+      const user = localStorage.getItem("user");
+      if (user) {
+        return JSON.parse(user).fullName || "user";
+      }
+    } catch {}
+    return "user";
+  });
+  const [userId] = useState(() => {
+    try {
+      const user = localStorage.getItem("user");
+      if (user) {
+        return JSON.parse(user)._id; // Make sure you store _id in localStorage on login
+      }
+    } catch {}
+    return null;
+  });
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState<Comment[]>([]);
   const [loadingComments, setLoadingComments] = useState(false);
@@ -42,12 +60,11 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
     e.preventDefault();
     if (comment.trim() === "") return;
     try {
+      const token = localStorage.getItem("token");
       const res = await axios.post(
         `http://localhost:3000/products/${productId}/comments`,
-        {
-          username,
-          comment,
-        }
+        { comment },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       setComments([res.data, ...comments]);
       setComment("");
@@ -182,30 +199,34 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
                   )}
                 </div>
                 <div className="flex items-center gap-2 ml-2">
-                  <button
-                    className="text-blue-500 hover:text-blue-700"
-                    title="Edit"
-                    onClick={() => handleEdit(idx)}
-                  >
-                    Edit
-                  </button>
+                  {userId === c.userId && (
+                    <>
+                      <button
+                        className="text-blue-500 hover:text-blue-700"
+                        title="Edit"
+                        onClick={() => handleEdit(idx)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="text-red-500 hover:text-red-700"
+                        title="Delete"
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDelete(idx);
+                        }}
+                      >
+                        <FiTrash2 />
+                      </button>
+                    </>
+                  )}
                   <button
                     className="flex items-center text-pink-500 hover:text-pink-700"
                     title="React"
                     onClick={() => handleReact(idx)}
                   >
                     <FiHeart className="mr-1" /> {c.hearts}
-                  </button>
-                  <button
-                    className="text-red-500 hover:text-red-700"
-                    title="Delete"
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDelete(idx);
-                    }}
-                  >
-                    <FiTrash2 />
                   </button>
                 </div>
               </li>

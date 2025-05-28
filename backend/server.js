@@ -18,5 +18,8 @@ app.use('/uploads', express.static('uploads'));
 const productsRouter = require('./routes/products.js')
 app.use('/products', productsRouter)
 
+const authRouter = require('./routes/auth.js');
+app.use('/auth', authRouter);
+
 
 app.listen(3000, () => console.log('Server Started'))

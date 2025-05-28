@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Eye, EyeOff, Check } from 'lucide-react';
 import { useToast } from '../hooks/use-toast.ts';
+import axios from 'axios';
 
 const Register: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +14,7 @@ const Register: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -28,11 +30,11 @@ const Register: React.FC = () => {
     return regex.test(password);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const { fullName, email, password, confirmPassword } = formData;
-    
+
     if (!fullName || !email || !password || !confirmPassword) {
       toast({
         title: "Error",
@@ -60,13 +62,26 @@ const Register: React.FC = () => {
       return;
     }
 
-    toast({
-      title: "Success",
-      description: "Account created successfully. Redirecting to login...",
-    });
-
-    console.log('Registration attempt with:', { fullName, email });
-    // Redirect would happen here after registration
+    try {
+      await axios.post('http://localhost:3000/auth/register', {
+        fullName,
+        email,
+        password
+      });
+      toast({
+        title: "Success",
+        description: "Account created successfully. Redirecting to login...",
+      });
+      setTimeout(() => {
+        navigate('/login');
+      }, 1200);
+    } catch (err: any) {
+      toast({
+        title: "Registration Failed",
+        description: err.response?.data?.message || "An error occurred",
+        variant: "destructive",
+      });
+    }
   };
 
   const isPasswordValid = validatePassword(formData.password);

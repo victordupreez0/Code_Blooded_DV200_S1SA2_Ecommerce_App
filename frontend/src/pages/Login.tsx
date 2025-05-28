@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Add useNavigate
 import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '../hooks/use-toast.ts';
+import axios from 'axios';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate(); // For redirect
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically handle the login logic
-    
+
     if (!email || !password) {
       toast({
         title: "Error",
@@ -22,13 +23,27 @@ const Login: React.FC = () => {
       return;
     }
 
-    toast({
-      title: "Success",
-      description: "Login successful. Redirecting...",
-    });
-
-    console.log('Login attempt with:', { email, password });
-    // Redirect would happen here after authentication
+    try {
+      const res = await axios.post('http://localhost:3000/auth/login', { email, password });
+      localStorage.setItem('token', res.data.token);
+      localStorage.setItem('user', JSON.stringify({
+        _id: res.data.user._id,
+        fullName: res.data.user.fullName
+      }));
+      toast({
+        title: "Success",
+        description: "Login successful. Redirecting...",
+      });
+      setTimeout(() => {
+        navigate('/postLogin'); // Redirect after login
+      }, 1000);
+    } catch (err: any) {
+      toast({
+        title: "Login Failed",
+        description: err.response?.data?.message || "An error occurred",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -115,14 +130,12 @@ const Login: React.FC = () => {
             </div>
 
             <div>
-              <Link to="/postLogin">
               <button
                 type="submit"
                 className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-luxury-black hover:bg-luxury-brown-darker focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-luxury-gold-dark transition-colors">
                 Sign in
                 <ArrowRight className="ml-2 h-4 w-4" />
               </button>
-              </Link>
             </div>
           </form>
 

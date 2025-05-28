@@ -3,6 +3,7 @@ const router = express.Router();
 const Product = require('../models/product.js');
 const multer = require('multer');
 const path = require('path');
+const auth = require('../middleware/auth'); // <-- Add this line
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -95,12 +96,14 @@ router.delete ('/:id', getProduct, async (req, res) => {
 });
 
 // Add a comment to a product
-router.post('/:id/comments', async (req, res) => {
+router.post('/:id/comments', auth, async (req, res) => {
     try {
         const product = await Product.findById(req.params.id);
         if (!product) return res.status(404).json({ message: 'Product not found' });
-        const { username, comment } = req.body;
-        const newComment = { username, comment, hearts: 0 };
+        const { comment } = req.body;
+        const userId = req.user.userId; // <-- Get userId from auth middleware
+        const username = req.user.fullName; // <-- Optionally get username from token
+        const newComment = { userId, username, comment, hearts: 0 };
         product.comments.unshift(newComment);
         await product.save();
         res.status(201).json(product.comments[0]);
