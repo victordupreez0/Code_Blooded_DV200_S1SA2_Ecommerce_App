@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
+import { ShoppingCart } from 'lucide-react';
 
 const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -57,12 +58,21 @@ const Navbar: React.FC = () => {
           
           <div className="flex items-center">
             {isAuthenticated ? (
-              <button
-                onClick={handleLogout}
-                className="bg-luxury-black text-white hover:bg-luxury-brown-darker px-4 py-2 rounded-md text-sm font-medium"
-              >
-                Log Out
-              </button>
+              <>
+                <button
+                  onClick={handleLogout}
+                  className="bg-luxury-black text-white hover:bg-luxury-brown-darker px-4 py-2 rounded-md text-sm font-medium"
+                >
+                  Log Out
+                </button>
+                <Link
+                  to="/cart"
+                  className="ml-4 flex items-center justify-center p-2 rounded-md text-luxury-black hover:text-luxury-gold-dark hover:bg-luxury-brown-light transition relative"
+                  title="View Cart"
+                >
+                  <ShoppingCart className="h-6 w-6" />
+                </Link>
+              </>
             ) : (
               <>
                 <Link to="/login" className="text-luxury-black hover:text-luxury-brown-dark font-medium mr-4">

@@ -81,6 +81,30 @@ const BrowseProducts: React.FC = () => {
                       <span className="ml-2 text-yellow-500">{'★'.repeat(Math.round(product.rating))}</span>
                     )}
                   </div>
+                  <button
+                    className="mt-3 bg-luxury-gold-medium text-luxury-black font-medium px-4 py-2 rounded hover:bg-luxury-gold-dark transition"
+                    onClick={e => {
+                      e.stopPropagation();
+                      // Add to cart logic (user-specific)
+                      const user = localStorage.getItem('user');
+                      if (!user) {
+                        window.location.href = '/login';
+                        return;
+                      }
+                      const userId = JSON.parse(user)._id;
+                      const cartKey = `cart_${userId}`;
+                      const cart = JSON.parse(localStorage.getItem(cartKey) || '[]');
+                      const existing = cart.find((item: any) => item._id === product._id);
+                      if (existing) {
+                        existing.quantity = (existing.quantity || 1) + 1;
+                      } else {
+                        cart.push({ ...product, quantity: 1 });
+                      }
+                      localStorage.setItem(cartKey, JSON.stringify(cart));
+                    }}
+                  >
+                    Add to Cart
+                  </button>
                 </div>
               ))}
             </div>
