@@ -6,7 +6,8 @@ function AddProduct() {
     name: '',
     price: '',
     description: '',
-    image: null
+    image: null,
+    category: ''
   });
   const [message, setMessage] = useState('');
   const [view, setView] = useState('add'); // 'add' or 'view'
@@ -30,6 +31,7 @@ function AddProduct() {
       formData.append('name', form.name);
       formData.append('price', form.price);
       formData.append('description', form.description);
+      formData.append('category', form.category);
       if (form.image) {
         formData.append('image', form.image);
       }
@@ -39,7 +41,7 @@ function AddProduct() {
         }
       });
       setMessage('Product created!');
-      setForm({ name: '', price: '', description: '', image: null });
+      setForm({ name: '', price: '', description: '', image: null, category: '' });
     } catch (err) {
       setMessage('Error creating product');
     }
@@ -141,6 +143,21 @@ function AddProduct() {
                   accept="image/*"
                   onChange={handleChange}
                 />
+              </div>
+              <div>
+                <label className="block mb-1 font-medium">Category</label>
+                <select
+                  className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  name="category"
+                  value={form.category}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Select a category</option>
+                  <option value="Rich">Rich</option>
+                  <option value="Richer">Richer</option>
+                  <option value="Richest">Richest</option>
+                </select>
               </div>
               <button
                 type="submit"

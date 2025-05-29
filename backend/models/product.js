@@ -23,7 +23,12 @@ const ProductSchema = new mongoose.Schema({
         type: String,
         required: true 
     },
-    comments: [CommentSchema]
+    comments: [CommentSchema],
+    
+    category: {
+        type: String,
+        required: true
+    },
 });
 
 module.exports = mongoose.model('Product', ProductSchema);
