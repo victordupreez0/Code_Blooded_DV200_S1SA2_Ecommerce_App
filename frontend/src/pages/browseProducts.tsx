@@ -6,11 +6,18 @@ import Footer from '../components/Footer';
 import { useProducts } from '../hooks/useProducts';
 import { Product } from '../types/product';
 import CommentSection from '../components/CommentSection';
+import "../components/styling/main.css";
 
 const BrowseProducts: React.FC = () => {
   const { products, loading, error } = useProducts();
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+
+  // Filter products by selected category
+  const filteredProducts = selectedCategory === 'All'
+    ? products
+    : products.filter((product) => product.category === selectedCategory);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -24,10 +31,16 @@ const BrowseProducts: React.FC = () => {
             <div>
               <h3 className="font-medium mb-2">Category</h3>
               <ul className="space-y-1">
-                <li><button className="w-full text-left px-2 py-1 rounded hover:bg-gray-100">All</button></li>
-                <li><button className="w-full text-left px-2 py-1 rounded hover:bg-gray-100">Rich</button></li>
-                <li><button className="w-full text-left px-2 py-1 rounded hover:bg-gray-100">Richer</button></li>
-                <li><button className="w-full text-left px-2 py-1 rounded hover:bg-gray-100">Richest</button></li>
+                {['All', 'Rich', 'Richer', 'Richest'].map((cat) => (
+                  <li key={cat}>
+                    <button
+                      className={`w-full text-left px-2 py-1 rounded hover:bg-gray-100 ${selectedCategory === cat ? 'bg-blue-100 font-bold' : ''}`}
+                      onClick={() => setSelectedCategory(cat)}
+                    >
+                      {cat}
+                    </button>
+                  </li>
+                ))}
               </ul>
             </div>
             {/* Price Filter */}
@@ -55,11 +68,11 @@ const BrowseProducts: React.FC = () => {
           {loading && <div>Loading products...</div>}
           {error && <div className="text-red-500">{error}</div>}
           {!loading && !error && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6">
-              {products.map((product: Product) => (
+            <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6">
+              {filteredProducts.map((product: Product) => (
                 <div
                   key={product._id}
-                  className="bg-white rounded-lg shadow-md p-4 flex flex-col cursor-pointer hover:ring-2 hover:ring-blue-400"
+                  className="product-card rounded-lg shadow-md p-4 flex flex-col cursor-pointer hover:ring-2 hover:ring-blue-400"
                   onClick={() => {
                     setSelectedProduct(product);
                     setShowCommentModal(true);

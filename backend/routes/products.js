@@ -49,7 +49,8 @@ router.post ('/', upload.single('image'), async (req, res) => {
     name: req.body.name,
     price: req.body.price,
     description: req.body.description,
-    imageUrl: imageUrl // Always save the imageUrl to the database
+    imageUrl: imageUrl, // Always save the imageUrl to the database
+    category: req.body.category
    })
 
    try{
@@ -164,6 +165,8 @@ router.post('/:id/comments/:commentId/react', async (req, res) => {
         res.status(400).json({ message: err.message });
     }
 });
+
+
 
 // Middelware
 async function getProduct(req, res, next) {
