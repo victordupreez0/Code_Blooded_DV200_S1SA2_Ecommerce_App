@@ -58,9 +58,14 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (comment.trim() === "") return;
+    if (comment.trim() === "") return; // Prevent empty comments
     try {
       const token = localStorage.getItem("token");
+      if (!token) {
+        setError("You must be logged in to comment.");
+        return;
+      }
+      // Only send the comment text; backend should use user info from JWT
       const res = await axios.post(
         `http://localhost:3000/products/${productId}/comments`,
         { comment },
@@ -68,13 +73,15 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
       );
       setComments([res.data, ...comments]);
       setComment("");
-    } catch (err) {
-      // handle error
+      setError(null);
+    } catch (err: any) {
+      setError(
+        err?.response?.data?.message || "Failed to post comment. Please try again."
+      );
     }
   };
 
-  const handleDelete = async (idx: number) => {
-    const commentId = comments[idx]?._id;
+  const handleDelete = async (commentId: string) => {
     if (!commentId) return;
     try {
       await axios.delete(
@@ -82,7 +89,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
       );
       setComments((prev) => prev.filter((c) => c._id !== commentId));
       // If editing, reset edit state if the deleted comment was being edited
-      if (editIdx === idx) {
+      if (editIdx !== null) {
         setEditIdx(null);
         setEditComment("");
       }
@@ -95,11 +102,21 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
   };
 
   const handleEdit = (idx: number) => {
+    // Only allow editing if the current user is the author
+    if (comments[idx].userId !== userId) {
+      setError("You can only edit your own comments.");
+      return;
+    }
     setEditIdx(idx);
     setEditComment(comments[idx].comment);
   };
 
   const handleEditSave = async (idx: number) => {
+    // Only allow saving if the current user is the author
+    if (comments[idx].userId !== userId) {
+      setError("You can only edit your own comments.");
+      return;
+    }
     const commentId = comments[idx]._id;
     try {
       const res = await axios.patch(
@@ -113,8 +130,11 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
       setComments(updated);
       setEditIdx(null);
       setEditComment("");
-    } catch (err) {
-      // handle error
+      setError(null);
+    } catch (err: any) {
+      setError(
+        err?.response?.data?.message || 'Failed to edit comment. Please try again.'
+      );
     }
   };
 
@@ -166,7 +186,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
           <ul className="space-y-4 list-none p-0 m-0">
             {comments.map((c, idx) => (
               <li
-                key={idx}
+                key={c._id}
                 className="comment-row bg-gray-100 p-3 rounded shadow-sm text-gray-800 flex items-center relative"
                 style={{ listStyleType: "none", width: "100%" }}
               >
@@ -184,12 +204,13 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
                       <button
                         className="text-xs text-green-600 mr-1"
                         onClick={() => handleEditSave(idx)}
+                        disabled={editComment.trim() === "" || editComment === c.comment}
                       >
                         Save
                       </button>
                       <button
                         className="text-xs text-gray-500"
-                        onClick={() => setEditIdx(null)}
+                        onClick={() => { setEditIdx(null); setEditComment(""); }}
                       >
                         Cancel
                       </button>
@@ -199,28 +220,27 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
                   )}
                 </div>
                 <div className="flex items-center gap-2 ml-2">
+                  {/* Show Edit only for own comments, but Delete for all */}
                   {userId === c.userId && (
-                    <>
-                      <button
-                        className="text-blue-500 hover:text-blue-700"
-                        title="Edit"
-                        onClick={() => handleEdit(idx)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="text-red-500 hover:text-red-700"
-                        title="Delete"
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDelete(idx);
-                        }}
-                      >
-                        <FiTrash2 />
-                      </button>
-                    </>
+                    <button
+                      className="text-blue-500 hover:text-blue-700"
+                      title="Edit"
+                      onClick={() => handleEdit(idx)}
+                    >
+                      Edit
+                    </button>
                   )}
+                  <button
+                    className="text-red-500 hover:text-red-700"
+                    title="Delete"
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(c._id);
+                    }}
+                  >
+                    <FiTrash2 />
+                  </button>
                   <button
                     className="flex items-center text-pink-500 hover:text-pink-700"
                     title="React"
