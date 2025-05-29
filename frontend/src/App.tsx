@@ -8,6 +8,8 @@ import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import PostLogin from "./pages/PostLogin";
 import ViewProduct from "./components/viewProduct";
+import BrowseProducts from "./pages/browseProducts";
+
 
 const queryClient = new QueryClient();
 
@@ -22,6 +24,7 @@ const App = () => (
           <Route path="/register" element={<Register />} />
           <Route path="/postLogin" element={<PostLogin />} />
           <Route path="/product/:id" element={<ViewProduct />} />
+          <Route path="/browseProducts" element={<BrowseProducts />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

@@ -21,7 +21,7 @@ const ProductSchema = new mongoose.Schema({
     },
     imageUrl: {
         type: String,
-        required: true // Not all products must have an image
+        required: true 
     },
     comments: [CommentSchema]
 });
