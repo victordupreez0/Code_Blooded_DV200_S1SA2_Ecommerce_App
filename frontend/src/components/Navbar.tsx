@@ -50,8 +50,8 @@ const Navbar: React.FC = () => {
             <Link to="/link-2" className="border-transparent text-luxury-black hover:text-luxury-brown-dark px-1 pt-1 font-medium">
               FAQ
             </Link>
-            <Link to="/link-3" className="border-transparent text-luxury-black hover:text-luxury-brown-dark px-1 pt-1 font-medium">
-              Contact Us
+            <Link to="/BrowseProducts" className="border-transparent text-luxury-black hover:text-luxury-brown-dark px-1 pt-1 font-medium">
+              Browse
             </Link>
           </div>
           
