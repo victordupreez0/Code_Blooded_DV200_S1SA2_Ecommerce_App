@@ -35,7 +35,7 @@ const Login: React.FC = () => {
         description: "Login successful. Redirecting...",
       });
       setTimeout(() => {
-        navigate('/postLogin'); // Redirect after login
+        navigate('/browseProducts'); // Redirect after login
       }, 1000);
     } catch (err: any) {
       toast({

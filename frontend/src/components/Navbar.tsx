@@ -42,7 +42,7 @@ const Navbar: React.FC = () => {
               Home
             </Link>
             <Link
-              to={isAuthenticated ? "/postlogin" : "/login"}
+              to={isAuthenticated ? "/BrowseProducts" : "/login"}
               className="border-transparent text-luxury-black hover:text-luxury-brown-dark px-1 pt-1 font-medium"
             >
               Products
@@ -50,8 +50,8 @@ const Navbar: React.FC = () => {
             <Link to="/link-2" className="border-transparent text-luxury-black hover:text-luxury-brown-dark px-1 pt-1 font-medium">
               FAQ
             </Link>
-            <Link to="/BrowseProducts" className="border-transparent text-luxury-black hover:text-luxury-brown-dark px-1 pt-1 font-medium">
-              Browse
+            <Link to="/postLogin" className="border-transparent text-luxury-black hover:text-luxury-brown-dark px-1 pt-1 font-medium">
+              Admin
             </Link>
           </div>
           
