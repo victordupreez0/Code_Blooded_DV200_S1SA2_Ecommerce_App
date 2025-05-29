@@ -1,9 +1,31 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Menu, Search, X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
 
 const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
+
+  // Check auth state on mount and when localStorage changes
+  useEffect(() => {
+    const checkAuth = () => {
+      const token = localStorage.getItem('token');
+      setIsAuthenticated(!!token);
+    };
+    checkAuth();
+
+    // Listen for changes to localStorage (e.g., login/logout in other tabs)
+    window.addEventListener('storage', checkAuth);
+    return () => window.removeEventListener('storage', checkAuth);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setIsAuthenticated(false);
+    navigate('/'); // Redirect to home or login
+  };
 
   return (
     <nav className="bg-white/80 backdrop-blur-sm border-b border-luxury-brown-light sticky top-0 z-50">
@@ -15,29 +37,42 @@ const Navbar: React.FC = () => {
             </Link>
           </div>
 
-
           <div className="hidden sm:ml-6 sm:flex sm:space-x-8 mt-4">
             <Link to="/" className="border-transparent text-luxury-black hover:text-luxury-brown-dark px-1 pt-1 font-medium">
               Home
             </Link>
-            <Link to="/link-1" className="border-transparent text-luxury-black hover:text-luxury-brown-dark px-1 pt-1 font-medium">
-              Link 1
+            <Link
+              to={isAuthenticated ? "/postlogin" : "/login"}
+              className="border-transparent text-luxury-black hover:text-luxury-brown-dark px-1 pt-1 font-medium"
+            >
+              Products
             </Link>
             <Link to="/link-2" className="border-transparent text-luxury-black hover:text-luxury-brown-dark px-1 pt-1 font-medium">
-              Link 2
+              FAQ
             </Link>
             <Link to="/link-3" className="border-transparent text-luxury-black hover:text-luxury-brown-dark px-1 pt-1 font-medium">
-              Link 3
+              Contact Us
             </Link>
           </div>
           
           <div className="flex items-center">
-            <Link to="/login" className="text-luxury-black hover:text-luxury-brown-dark font-medium mr-4">
-              Sign In
-            </Link>
-            <Link to="/register" className="bg-luxury-black text-white hover:bg-luxury-brown-darker px-4 py-2 rounded-md text-sm font-medium">
-              Register
-            </Link>
+            {isAuthenticated ? (
+              <button
+                onClick={handleLogout}
+                className="bg-luxury-black text-white hover:bg-luxury-brown-darker px-4 py-2 rounded-md text-sm font-medium"
+              >
+                Log Out
+              </button>
+            ) : (
+              <>
+                <Link to="/login" className="text-luxury-black hover:text-luxury-brown-dark font-medium mr-4">
+                  Sign In
+                </Link>
+                <Link to="/register" className="bg-luxury-black text-white hover:bg-luxury-brown-darker px-4 py-2 rounded-md text-sm font-medium">
+                  Register
+                </Link>
+              </>
+            )}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="ml-4 sm:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-luxury-gold-dark"

@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Bitcoin from '../assets/Bitcoin.png';
 
 const Hero: React.FC = () => {
   return (
@@ -17,18 +18,20 @@ const Hero: React.FC = () => {
             </p>
             <div className="mt-8 sm:max-w-lg sm:mx-auto sm:text-center lg:text-left lg:mx-0">
               <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center lg:justify-start">
-                <Link to="/register" className="bg-luxury-black text-white hover:bg-luxury-brown-darker px-6 py-3 rounded-md text-base font-medium inline-flex items-center transition-colors">
-                  Primary
+                <Link to="/login" className="bg-luxury-black text-white hover:bg-luxury-brown-darker px-6 py-3 rounded-md text-base font-medium inline-flex items-center transition-colors">
+                  Log-in
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
                 <Link to="/learn-more" className="bg-white text-luxury-black border border-luxury-brown-light hover:bg-luxury-brown-light px-6 py-3 rounded-md text-base font-medium transition-colors">
-                  Secondary
+                  Learn more
                 </Link>
               </div>
             </div>
           </div>
           <div className="mt-12 sm:mt-16 lg:mt-0 lg:col-span-6 flex justify-center items-center">
-            <div className="bg-gray-200 rounded-lg w-full aspect-video lg:max-w-md"></div>
+            <div>
+              <img src={Bitcoin} alt='Bitcoin' className='max-h-80 w-auto animate-bob'></img>
+            </div>
           </div>
         </div>
       </div>
