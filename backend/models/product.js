@@ -29,6 +29,17 @@ const ProductSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+
+
+    flagged: {
+        type: Boolean,
+        default: false
+    },
+
+    flagReason: {
+        type: String,
+        default: ''
+    }
 });
 
 module.exports = mongoose.model('Product', ProductSchema);
