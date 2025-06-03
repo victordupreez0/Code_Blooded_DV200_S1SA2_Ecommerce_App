@@ -22,12 +22,16 @@ export default {
 				// Custom luxury color palette
 				luxury: {
 					brown: {
-						light: "#FBEADA",
-						medium: "#FFC57D",
-						dark: "#635042",
-						darker: "#78645B"
+						light: "#f9c976",
+						medium: "#f9c976",
+						dark: "#f9c976",
+						darker: "#181816"
 					},
 					black: "#111111",
+					white: "#ffffff",
+					offwhite: "#FFF4E0",
+					primaryGold: "#f9c976",
+					primaryBG: "#3e3629",
 					gold: {
 						light: "#E6D2B7",
 						medium: "#DBC19A",
@@ -115,7 +119,7 @@ export default {
 				'accordion-up': 'accordion-up 0.2s ease-out',
                 'fade-in': 'fade-in 0.5s ease-out forwards',
 				bob: 'bob 2s infinite ease-in-out',
-			}
+			},
 		}
 	},
 	plugins: [require("tailwindcss-animate")],

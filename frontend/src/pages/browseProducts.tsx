@@ -26,17 +26,21 @@ const BrowseProducts: React.FC = () => {
       <Navbar />
       <main className="flex-grow flex">
         {/* Sidebar Filter */}
-        <aside className="w-64 bg-white border-r border-gray-200 p-6 hidden md:block mx-5 my-5 rounded-lg shadow-md">
-          <h2 className="text-lg font-semibold mb-4">Filter Products</h2>
+        <aside className="fixed top-[80px] left-10 h-fit-content w-52 border-r border-luxury-primaryGold p-4 z-40 hidden md:block">
+          <h2 className="text-base text-luxury-primaryGold font-semibold mb-3 tracking-wide uppercase">Filter Products</h2>
           <div className="space-y-6">
             {/* Category Filter */}
             <div>
-              <h3 className="font-medium mb-2">Category</h3>
+              <h3 className="font-semibold mb-2 text-luxury-primaryGold tracking-wide uppercase text-sm">Category</h3>
               <ul className="space-y-1">
                 {['All', 'Rich', 'Richer', 'Richest'].map((cat) => (
                   <li key={cat}>
                     <button
-                      className={`w-full text-left px-2 py-1 rounded hover:bg-gray-100 ${selectedCategory === cat ? 'bg-blue-100 font-bold' : ''}`}
+                      className={`w-full text-left px-2 py-1  transition font-semibold tracking-wide text-sm border border-transparent
+                        ${selectedCategory === cat
+                          ? 'bg-luxury-primaryGold text-black shadow-md'
+                          : 'text-luxury-primaryGold hover:bg-luxury-gold-medium hover:text-black hover:border-luxury-primaryGold'}
+                    `}
                       onClick={() => setSelectedCategory(cat)}
                     >
                       {cat}
@@ -47,96 +51,99 @@ const BrowseProducts: React.FC = () => {
             </div>
             {/* Price Filter */}
             <div>
-              <h3 className="font-medium mb-2">Price</h3>
+              <h3 className="font-semibold mb-2 text-luxury-primaryGold tracking-wide uppercase text-sm">Price</h3>
               <ul className="space-y-1">
-                <li><button className="w-full text-left px-2 py-1 rounded hover:bg-gray-100">Under $1B</button></li>
-                <li><button className="w-full text-left px-2 py-1 rounded hover:bg-gray-100">$1B - $100B</button></li>
-                <li><button className="w-full text-left px-2 py-1 rounded hover:bg-gray-100">$100B+</button></li>
+                <li><button className="w-full text-left px-2 py-1  text-luxury-primaryGold font-semibold hover:bg-luxury-gold-medium hover:text-black transition text-sm">Under $1B</button></li>
+                <li><button className="w-full text-left px-2 py-1 text-luxury-primaryGold font-semibold hover:bg-luxury-gold-medium hover:text-black transition text-sm">$1B - $100B</button></li>
+                <li><button className="w-full text-left px-2 py-1 text-luxury-primaryGold font-semibold hover:bg-luxury-gold-medium hover:text-black transition text-sm">$100B+</button></li>
               </ul>
             </div>
             {/* Rating Filter */}
             <div>
-              <h3 className="font-medium mb-2">Rating</h3>
+              <h3 className="font-semibold mb-2 text-luxury-primaryGold tracking-wide uppercase text-sm">Rating</h3>
               <ul className="space-y-1">
-                <li><button className="w-full text-left px-2 py-1 rounded hover:bg-gray-100">4★ & up</button></li>
-                <li><button className="w-full text-left px-2 py-1 rounded hover:bg-gray-100">3★ & up</button></li>
-                <li><button className="w-full text-left px-2 py-1 rounded hover:bg-gray-100">All Ratings</button></li>
+                <li><button className="w-full text-left px-2 py-1 text-luxury-primaryGold font-semibold hover:bg-luxury-gold-medium hover:text-black transition text-sm">4★ & up</button></li>
+                <li><button className="w-full text-left px-2 py-1 text-luxury-primaryGold font-semibold hover:bg-luxury-gold-medium hover:text-black transition text-sm">3★ & up</button></li>
+                <li><button className="w-full text-left px-2 py-1 text-luxury-primaryGold font-semibold hover:bg-luxury-gold-medium hover:text-black transition text-sm">All Ratings</button></li>
               </ul>
             </div>
           </div>
         </aside>
         {/* Main Content */}
-        <div className="flex-1 p-6">
+        <div className="flex-1 p-6 md:ml-64"> {/* <-- Add md:ml-64 here */}
           {loading && <div>Loading products...</div>}
           {error && <div className="text-red-500">{error}</div>}
           {!loading && !error && (
-            <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {filteredProducts.map((product: Product) => (
                 <div
                   key={product._id}
-                  className="product-card rounded-lg shadow-md p-4 flex flex-col cursor-pointer hover:ring-2 hover:ring-blue-400"
+                  className="product-card bg-neutral-900/50 rounded shadow-md p-4 flex flex-col cursor-pointer group"
                   onClick={() => {
                     setSelectedProduct(product);
                     setShowCommentModal(true);
                   }}
                 >
-                  {product.imageUrl && (
-                    <img
-                      src={product.imageUrl.startsWith('http') ? product.imageUrl : `http://localhost:3000${product.imageUrl}`}
-                      alt={product.name}
-                      className="h-40 w-full object-cover rounded mb-3"
-                      onError={e => (e.currentTarget.style.display = 'none')}
-                    />
-                  )}
-                  <h3 className="text-lg font-semibold mb-1">{product.name}</h3>
-                  <p className="text-gray-600 mb-2 line-clamp-2">{product.description}</p>
+                  <div className="relative group w-full">
+                    {product.imageUrl && (
+                      <img
+                        src={product.imageUrl.startsWith('http') ? product.imageUrl : `http://localhost:3000${product.imageUrl}`}
+                        alt={product.name}
+                        className="h-40 w-full object-cover rounded mb-5"
+                        onError={e => (e.currentTarget.style.display = 'none')}
+                      />
+                    )}
+                    {/* Gradient overlay, hidden on hover of the card */}
+                    
+                  </div>
+                  <h3 className="text-lg text-luxury-white font-semibold mb-1">{product.name}</h3>
+                  <p className="text-luxury-offwhite  mb-2 line-clamp-2">{product.description}</p>
                   <div className="flex items-center justify-between mt-auto">
-                    <span className="text-xl font-bold text-green-700">${product.price.toLocaleString()}</span>
+                    <span className="text-l text-luxury-primaryGold font-bold text-green-700">${product.price.toLocaleString()}</span>
                     {product.rating && (
                       <span className="ml-2 text-yellow-500">{'★'.repeat(Math.round(product.rating))}</span>
                     )}
                   </div>
-                  <button
-                    className="mt-3 bg-luxury-gold-medium text-luxury-black font-medium px-4 py-2 rounded hover:bg-luxury-gold-dark transition"
-                    onClick={e => {
-                      e.stopPropagation();
-                      // Add to cart logic (user-specific)
-                      const user = localStorage.getItem('user');
-                      if (!user) {
-                        window.location.href = '/login';
-                        return;
-                      }
-                      const userId = JSON.parse(user)._id;
-                      const cartKey = `cart_${userId}`;
-                      const cart = JSON.parse(localStorage.getItem(cartKey) || '[]');
-                      const existing = cart.find((item: any) => item._id === product._id);
-                      if (existing) {
-                        existing.quantity = (existing.quantity || 1) + 1;
-                      } else {
-                        cart.push({ ...product, quantity: 1 });
-                      }
-                      localStorage.setItem(cartKey, JSON.stringify(cart));
-                    }}
-                  >
-                    Add to Cart
-                  </button>
-
+                  <div className="flex items-center justify-between mt-3 gap-2">
+                    
                     <FaFlag
-                  className="ml-2 text-red-500 cursor-pointer hover:text-red-700"
-                  title="Flag this product"
-                  size={18}
-                  onClick={async (e) => {
-                    e.stopPropagation
-                    const reason = prompt ('why flag this');
-                    if (reason) {
-                      await axios.post(`http://localhost:3000/products/${product._id}/flag`, { reason });
-                      alert('Product flagged success');
-
-                    }
-                  }}
-                />
-                
-                
+                      className="ml-2 text-red-500 cursor-pointer hover:text-red-700"
+                      title="Flag this product"
+                      size={18}
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        const reason = prompt('why flag this');
+                        if (reason) {
+                          await axios.post(`http://localhost:3000/products/${product._id}/flag`, { reason });
+                          alert('Product flagged success');
+                        }
+                      }}
+                    />
+                    <button
+                      className="bg-luxury-primaryGold text-luxury-black font-medium px-4 py-2  hover:bg-luxury-gold-dark hover:text-luxury-white transition"
+                      onClick={e => {
+                        e.stopPropagation();
+                        // Add to cart logic (user-specific)
+                        const user = localStorage.getItem('user');
+                        if (!user) {
+                          window.location.href = '/login';
+                          return;
+                        }
+                        const userId = JSON.parse(user)._id;
+                        const cartKey = `cart_${userId}`;
+                        const cart = JSON.parse(localStorage.getItem(cartKey) || '[]');
+                        const existing = cart.find((item: any) => item._id === product._id);
+                        if (existing) {
+                          existing.quantity = (existing.quantity || 1) + 1;
+                        } else {
+                          cart.push({ ...product, quantity: 1 });
+                        }
+                        localStorage.setItem(cartKey, JSON.stringify(cart));
+                      }}
+                    >
+                      Add to Cart
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>

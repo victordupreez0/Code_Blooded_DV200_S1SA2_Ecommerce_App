@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 34 30% 95%;
+    --background: #fe7b00; /* or any color you want */
     --foreground: 20 10% 10%;
 
     --card: 0 0% 100%;
@@ -51,8 +51,13 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
+  background: linear-gradient(to bottom, #2b2b2b 0%, #343434 40%, #1C1C1C 150%), linear-gradient(to top, rgba(52, 52, 52, 0.4) 0%, rgba(0,0,0,0.25) 200%);
+ background-blend-mode: multiply;
+ background-blend-mode: multiply;
+    color: hsl(var(--foreground));
     font-family: "Montserrat", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   .luxury-button {

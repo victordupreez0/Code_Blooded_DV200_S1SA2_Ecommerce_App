@@ -29,29 +29,29 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="bg-white/80 backdrop-blur-sm border-b border-luxury-brown-light sticky top-0 z-50">
+    <nav className="bg-[#181816]/100 border-luxury-brown-light sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0 flex items-center">
-              <span className="text-luxury-gold-dark font-serif text-2xl font-bold">Billionares</span>
+              <span className="text-luxury-brown-dark font-serif text-2xl font-bold">Billionaires</span>
             </Link>
           </div>
 
           <div className="hidden sm:ml-6 sm:flex sm:space-x-8 mt-4">
-            <Link to="/" className="border-transparent text-luxury-black hover:text-luxury-brown-dark px-1 pt-1 font-medium">
+            <Link to="/" className="border-transparent text-luxury-brown-dark hover:text-luxury-brown-dark px-1 pt-1 font-medium">
               Home
             </Link>
             <Link
               to={isAuthenticated ? "/BrowseProducts" : "/login"}
-              className="border-transparent text-luxury-black hover:text-luxury-brown-dark px-1 pt-1 font-medium"
+              className="border-transparent text-luxury-brown-dark hover:text-luxury-brown-dark px-1 pt-1 font-medium"
             >
               Products
             </Link>
-            <Link to="/link-2" className="border-transparent text-luxury-black hover:text-luxury-brown-dark px-1 pt-1 font-medium">
+            <Link to="/link-2" className="border-transparent text-luxury-brown-dark hover:text-luxury-brown-dark px-1 pt-1 font-medium">
               FAQ
             </Link>
-            <Link to="/postLogin" className="border-transparent text-luxury-black hover:text-luxury-brown-dark px-1 pt-1 font-medium">
+            <Link to="/postLogin" className="border-transparent text-luxury-brown-dark hover:text-luxury-brown-dark px-1 pt-1 font-medium">
               Admin
             </Link>
           </div>
