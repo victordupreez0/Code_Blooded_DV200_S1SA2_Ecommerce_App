@@ -236,12 +236,6 @@ function AddProduct() {
                           )}
                           </div>
                         )}
-
-                          
-
-
-
-
                     </li>
                   ))}
                 </ul>
