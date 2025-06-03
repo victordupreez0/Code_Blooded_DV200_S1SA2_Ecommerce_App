@@ -167,6 +167,35 @@ router.post('/:id/comments/:commentId/react', async (req, res) => {
 });
 
 
+router.post('/:id/flag', async (req, res) => {
+    try{
+        const {reason} = req.body;
+        const product = await Product.findByIdAndUpdate(
+            req.params.id,
+            {flagged: true, flagReason: reason || ''},
+            {new: true}
+
+        );
+        res.json(product);
+    } catch(err) {
+        res.status(400).json({ error : 'failed to flag'});
+
+    
+    }
+});
+
+
+router.post('/flagged',async (req, res) => {
+    try{
+        const flaggedProducts = await Product.find({ flagged: true});
+        res.json(flaggedProducts);
+    } catch(err) {
+        res.status(400).json({ error : 'failed to fetch'});
+    }
+    
+});
+
+
 
 // Middelware
 async function getProduct(req, res, next) {

@@ -3,48 +3,48 @@ import { Link } from 'react-router-dom';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-luxury-brown-light">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+    <footer className="bg-neutral-900">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-2">
           <div>
-            <h3 className="text-lg font-medium text-luxury-black mb-4">Company</h3>
+            <h3 className="text-sm font-medium text-white mb-4">Company</h3>
             <ul className="space-y-2">
-              <li><Link to="/about" className="text-luxury-brown-dark hover:text-luxury-black">About</Link></li>
-              <li><Link to="/careers" className="text-luxury-brown-dark hover:text-luxury-black">Careers</Link></li>
-              <li><Link to="/press" className="text-luxury-brown-dark hover:text-luxury-black">Press</Link></li>
+              <li><Link to="/about" className="text-xs text-gray-300 hover:text-white">About</Link></li>
+              <li><Link to="/careers" className="text-xs text-gray-300 hover:text-white">Careers</Link></li>
+              <li><Link to="/press" className="text-xs text-gray-300 hover:text-white">Press</Link></li>
             </ul>
           </div>
 
           <div>
-            <h3 className="text-lg font-medium text-luxury-black mb-4">Legal</h3>
+            <h3 className="text-sm font-medium text-white mb-4">Legal</h3>
             <ul className="space-y-2">
-              <li><Link to="/terms" className="text-luxury-brown-dark hover:text-luxury-black">Terms</Link></li>
-              <li><Link to="/privacy" className="text-luxury-brown-dark hover:text-luxury-black">Privacy</Link></li>
-              <li><Link to="/cookies" className="text-luxury-brown-dark hover:text-luxury-black">Cookies</Link></li>
+              <li><Link to="/terms" className="text-xs text-gray-300 hover:text-white">Terms</Link></li>
+              <li><Link to="/privacy" className="text-xs text-gray-300 hover:text-white">Privacy</Link></li>
+              <li><Link to="/cookies" className="text-xs text-gray-300 hover:text-white">Cookies</Link></li>
             </ul>
           </div>
 
           <div>
-            <h3 className="text-lg font-medium text-luxury-black mb-4">Support</h3>
+            <h3 className="text-sm font-medium text-white mb-4">Support</h3>
             <ul className="space-y-2">
-              <li><Link to="/help" className="text-luxury-brown-dark hover:text-luxury-black">Help Center</Link></li>
-              <li><Link to="/contact" className="text-luxury-brown-dark hover:text-luxury-black">Contact Us</Link></li>
-              <li><Link to="/faq" className="text-luxury-brown-dark hover:text-luxury-black">FAQ</Link></li>
+              <li><Link to="/help" className="text-xs text-gray-300 hover:text-white">Help Center</Link></li>
+              <li><Link to="/contact" className="text-xs text-gray-300 hover:text-white">Contact Us</Link></li>
+              <li><Link to="/faq" className="text-xs text-gray-300 hover:text-white">FAQ</Link></li>
             </ul>
           </div>
 
           <div>
-            <h3 className="text-lg font-medium text-luxury-black mb-4">Social</h3>
+            <h3 className="text-sm font-medium text-white mb-4">Social</h3>
             <ul className="space-y-2">
-              <li><a href="#" className="text-luxury-brown-dark hover:text-luxury-black">Instagram</a></li>
-              <li><a href="#" className="text-luxury-brown-dark hover:text-luxury-black">Twitter</a></li>
-              <li><a href="#" className="text-luxury-brown-dark hover:text-luxury-black">LinkedIn</a></li>
+              <li><a href="#" className="text-xs text-gray-300 hover:text-white">Instagram</a></li>
+              <li><a href="#" className="text-xs text-gray-300 hover:text-white">Twitter</a></li>
+              <li><a href="#" className="text-xs text-gray-300 hover:text-white">LinkedIn</a></li>
             </ul>
           </div>
         </div>
 
-        <div className="border-t border-luxury-brown-medium pt-8">
-          <p className="text-center text-luxury-brown-dark">&copy; {new Date().getFullYear()} acquire. All rights reserved.</p>
+        <div className="border-t border-luxury-brown-medium pt-2">
+          <p className="text-center text-white">&copy; {new Date().getFullYear()} acquire. All rights reserved.</p>
         </div>
       </div>
     </footer>

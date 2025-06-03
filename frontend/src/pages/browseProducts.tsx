@@ -7,6 +7,8 @@ import { useProducts } from '../hooks/useProducts';
 import { Product } from '../types/product';
 import CommentSection from '../components/CommentSection';
 import "../components/styling/main.css";
+import axios from 'axios';
+import { FaFlag } from 'react-icons/fa';
 
 const BrowseProducts: React.FC = () => {
   const { products, loading, error } = useProducts();
@@ -118,6 +120,23 @@ const BrowseProducts: React.FC = () => {
                   >
                     Add to Cart
                   </button>
+
+                    <FaFlag
+                  className="ml-2 text-red-500 cursor-pointer hover:text-red-700"
+                  title="Flag this product"
+                  size={18}
+                  onClick={async (e) => {
+                    e.stopPropagation
+                    const reason = prompt ('why flag this');
+                    if (reason) {
+                      await axios.post(`http://localhost:3000/products/${product._id}/flag`, { reason });
+                      alert('Product flagged success');
+
+                    }
+                  }}
+                />
+                
+                
                 </div>
               ))}
             </div>
