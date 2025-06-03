@@ -78,7 +78,7 @@ const BrowseProducts: React.FC = () => {
               {filteredProducts.map((product: Product) => (
                 <div
                   key={product._id}
-                  className="product-card bg-neutral-900/50 rounded shadow-md p-4 flex flex-col cursor-pointer group"
+                  className="product-card bg-neutral-900/50 backdrop-blur-sm rounded shadow-md p-4 flex flex-col cursor-pointer group"
                   onClick={() => {
                     setSelectedProduct(product);
                     setShowCommentModal(true);

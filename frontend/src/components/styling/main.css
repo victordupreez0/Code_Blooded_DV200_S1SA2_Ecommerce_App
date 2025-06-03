@@ -8,6 +8,7 @@
 .product-card:hover{
   outline: none !important;
   scale: 1.02;
+  box-shadow: 0 0px 30px rgba(255, 140, 0, 0.489);
 }
 
 .product-card:hover,
