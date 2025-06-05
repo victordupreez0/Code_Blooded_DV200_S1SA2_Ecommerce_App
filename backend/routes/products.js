@@ -141,7 +141,7 @@ router.delete('/:id/comments/:commentId', auth, async (req, res) => {
         if (!comment) {
             return res.status(404).json({ message: 'Comment not found' });
         }
-        // Only allow if admin or comment owner
+        // Allow if admin or comment owner
         if (req.user.role !== 'admin' && comment.userId.toString() !== req.user.userId) {
             return res.status(403).json({ message: 'Not authorized to delete this comment' });
         }

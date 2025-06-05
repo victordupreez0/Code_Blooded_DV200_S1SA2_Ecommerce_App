@@ -34,6 +34,15 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
     } catch {}
     return null;
   });
+  const [userRole] = useState(() => {
+    try {
+      const user = localStorage.getItem("user");
+      if (user) {
+        return JSON.parse(user).role || "user";
+      }
+    } catch {}
+    return "user";
+  });
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState<Comment[]>([]);
   const [loadingComments, setLoadingComments] = useState(false);
@@ -85,8 +94,14 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
   const handleDelete = async (commentId: string) => {
     if (!commentId) return;
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("You must be logged in to delete a comment.");
+        return;
+      }
       await axios.delete(
-        `http://localhost:3000/products/${productId}/comments/${commentId}`
+        `http://localhost:3000/products/${productId}/comments/${commentId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       setComments((prev) => prev.filter((c) => c._id !== commentId));
       // If editing, reset edit state if the deleted comment was being edited
@@ -104,7 +119,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
 
   const handleEdit = (idx: number) => {
     // Only allow editing if the current user is the author
-    if (String(comments[idx].userId) !== String(userId)) {
+    if (String(comments[idx].userId) !== String(userId) && userRole !== 'admin') {
       setError("You can only edit your own comments.");
       return;
     }
@@ -113,18 +128,24 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
   };
 
   const handleEditSave = async (idx: number) => {
-    // Only allow saving if the current user is the author
-    if (String(comments[idx].userId) !== String(userId)) {
+    // Only allow saving if the current user is the author or admin
+    if (String(comments[idx].userId) !== String(userId) && userRole !== 'admin') {
       setError("You can only edit your own comments.");
       return;
     }
     const commentId = comments[idx]._id;
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("You must be logged in to edit a comment.");
+        return;
+      }
       const res = await axios.patch(
         `http://localhost:3000/products/${productId}/comments/${commentId}`,
         {
           comment: editComment,
-        }
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       const updated = [...comments];
       updated[idx] = res.data;
@@ -231,7 +252,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
                   )}
                 </div>
                 <div className="flex items-center gap-2 ml-2">
-                  {String(userId) === String(c.userId) && (
+                  {(String(userId) === String(c.userId) || userRole === 'admin') && (
                     <>
                       <button
                         className="text-blue-500 hover:text-blue-700"
