@@ -5,7 +5,7 @@ import Bitcoin from '../assets/Bitcoin.png';
 
 const Hero: React.FC = () => {
   return (
-    <div className="bg-luxury-brown-light min-h-[400px] flex items-center">
+    <div className="bg-[linear-gradient(90deg,#938463_0%,#4b3a1a_100%)] flex items-center">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="lg:grid lg:grid-cols-12 lg:gap-8">
           <div className="sm:text-center md:max-w-2xl md:mx-auto lg:col-span-6 lg:text-left">
@@ -13,7 +13,7 @@ const Hero: React.FC = () => {
               <span className="block">Exclusive Acquisitions</span>
               <span className="block text-luxury-gold-dark">For The Discerning Few</span>
             </h1>
-            <p className="mt-3 text-base text-luxury-brown-darker sm:mt-5 sm:text-xl lg:text-lg xl:text-xl">
+            <p className="mt-3 text-base text-offwhite sm:mt-5 sm:text-xl lg:text-lg xl:text-xl">
               There are many variations of exclusive items available, but the majority have been curated in some form, by selected vendors, or meticulously authenticated. If you are going to use this marketplace, make sure there isn't anything misrepresented in the listing.
             </p>
             <div className="mt-8 sm:max-w-lg sm:mx-auto sm:text-center lg:text-left lg:mx-0">

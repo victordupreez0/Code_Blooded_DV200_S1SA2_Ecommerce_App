@@ -30,7 +30,7 @@ const features = [
 
 const Features: React.FC = () => {
   return (
-    <div className="py-20 bg-white">
+    <div className="py-20 bg-primaryBG">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
           {features.map((feature) => (
