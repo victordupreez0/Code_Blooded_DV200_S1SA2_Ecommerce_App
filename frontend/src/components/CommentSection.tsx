@@ -12,6 +12,7 @@ interface Comment {
   username: string;
   comment: string;
   hearts: number;
+  likedBy?: string[];
 }
 
 const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
@@ -28,7 +29,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
     try {
       const user = localStorage.getItem("user");
       if (user) {
-        return JSON.parse(user)._id; // Make sure you store _id in localStorage on login
+        return JSON.parse(user)._id; 
       }
     } catch {}
     return null;
@@ -103,7 +104,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
 
   const handleEdit = (idx: number) => {
     // Only allow editing if the current user is the author
-    if (comments[idx].userId !== userId) {
+    if (String(comments[idx].userId) !== String(userId)) {
       setError("You can only edit your own comments.");
       return;
     }
@@ -113,7 +114,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
 
   const handleEditSave = async (idx: number) => {
     // Only allow saving if the current user is the author
-    if (comments[idx].userId !== userId) {
+    if (String(comments[idx].userId) !== String(userId)) {
       setError("You can only edit your own comments.");
       return;
     }
@@ -141,14 +142,24 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
   const handleReact = async (idx: number) => {
     const commentId = comments[idx]._id;
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("You must be logged in to like a comment.");
+        return;
+      }
       const res = await axios.post(
-        `http://localhost:3000/products/${productId}/comments/${commentId}/react`
+        `http://localhost:3000/products/${productId}/comments/${commentId}/react`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       const updated = [...comments];
       updated[idx] = res.data;
       setComments(updated);
-    } catch (err) {
-      // handle error
+      setError(null);
+    } catch (err: any) {
+      setError(
+        err?.response?.data?.message || "Failed to like comment. Please try again."
+      );
     }
   };
 
@@ -220,29 +231,30 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
                   )}
                 </div>
                 <div className="flex items-center gap-2 ml-2">
-                  {/* Show Edit only for own comments, but Delete for all */}
-                  {userId === c.userId && (
-                    <button
-                      className="text-blue-500 hover:text-blue-700"
-                      title="Edit"
-                      onClick={() => handleEdit(idx)}
-                    >
-                      Edit
-                    </button>
+                  {String(userId) === String(c.userId) && (
+                    <>
+                      <button
+                        className="text-blue-500 hover:text-blue-700"
+                        title="Edit"
+                        onClick={() => handleEdit(idx)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="text-red-500 hover:text-red-700"
+                        title="Delete"
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDelete(c._id);
+                        }}
+                      >
+                        <FiTrash2 />
+                      </button>
+                    </>
                   )}
                   <button
-                    className="text-red-500 hover:text-red-700"
-                    title="Delete"
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDelete(c._id);
-                    }}
-                  >
-                    <FiTrash2 />
-                  </button>
-                  <button
-                    className="flex items-center text-pink-500 hover:text-pink-700"
+                    className={`flex items-center ${c.likedBy && c.likedBy.includes(userId) ? "text-pink-600" : "text-pink-500 hover:text-pink-700"}`}
                     title="React"
                     onClick={() => handleReact(idx)}
                   >

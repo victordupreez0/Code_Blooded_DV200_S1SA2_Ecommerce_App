@@ -152,13 +152,24 @@ router.delete('/:id/comments/:commentId', async (req, res) => {
 });
 
 // React (heart) to a comment
-router.post('/:id/comments/:commentId/react', async (req, res) => {
+router.post('/:id/comments/:commentId/react', auth, async (req, res) => {
     try {
         const product = await Product.findById(req.params.id);
         if (!product) return res.status(404).json({ message: 'Product not found' });
         const comment = product.comments.id(req.params.commentId);
         if (!comment) return res.status(404).json({ message: 'Comment not found' });
-        comment.hearts += 1;
+        const userId = req.user.userId;
+        if (!comment.likedBy) comment.likedBy = [];
+        const userIndex = comment.likedBy.indexOf(userId);
+        if (userIndex !== -1) {
+            // User already liked: remove like
+            comment.hearts = Math.max(0, comment.hearts - 1);
+            comment.likedBy.splice(userIndex, 1);
+        } else {
+            // User has not liked: add like
+            comment.hearts += 1;
+            comment.likedBy.push(userId);
+        }
         await product.save();
         res.json(comment);
     } catch (err) {

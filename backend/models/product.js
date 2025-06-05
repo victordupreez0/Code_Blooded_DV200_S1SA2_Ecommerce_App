@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
 
 const CommentSchema = new mongoose.Schema({
+    userId: { type: String, required: true },
     username: { type: String, required: true },
     comment: { type: String, required: true },
-    hearts: { type: Number, default: 0 }
+    hearts: { type: Number, default: 0 },
+    likedBy: { type: [String], default: [] } // Array of userIds who liked
 }, { timestamps: true });
 
 const ProductSchema = new mongoose.Schema({
