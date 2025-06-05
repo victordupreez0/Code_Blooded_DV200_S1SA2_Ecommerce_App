@@ -28,7 +28,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
     try {
       const user = localStorage.getItem("user");
       if (user) {
-        return JSON.parse(user)._id; // Make sure you store _id in localStorage on login
+        return JSON.parse(user)._id; 
       }
     } catch {}
     return null;
@@ -103,7 +103,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
 
   const handleEdit = (idx: number) => {
     // Only allow editing if the current user is the author
-    if (comments[idx].userId !== userId) {
+    if (String(comments[idx].userId) !== String(userId)) {
       setError("You can only edit your own comments.");
       return;
     }
@@ -113,7 +113,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
 
   const handleEditSave = async (idx: number) => {
     // Only allow saving if the current user is the author
-    if (comments[idx].userId !== userId) {
+    if (String(comments[idx].userId) !== String(userId)) {
       setError("You can only edit your own comments.");
       return;
     }
@@ -220,8 +220,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
                   )}
                 </div>
                 <div className="flex items-center gap-2 ml-2">
-                  {/* Show Edit only for own comments, but Delete for all */}
-                  {userId === c.userId && (
+                  {String(userId) === String(c.userId) && (
                     <button
                       className="text-blue-500 hover:text-blue-700"
                       title="Edit"
