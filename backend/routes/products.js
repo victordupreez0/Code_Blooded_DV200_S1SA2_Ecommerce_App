@@ -114,12 +114,16 @@ router.post('/:id/comments', auth, async (req, res) => {
 });
 
 // Edit a comment
-router.patch('/:id/comments/:commentId', async (req, res) => {
+router.patch('/:id/comments/:commentId', auth, async (req, res) => {
     try {
         const product = await Product.findById(req.params.id);
         if (!product) return res.status(404).json({ message: 'Product not found' });
         const comment = product.comments.id(req.params.commentId);
         if (!comment) return res.status(404).json({ message: 'Comment not found' });
+        // Only allow if admin or comment owner
+        if (req.user.role !== 'admin' && comment.userId.toString() !== req.user.userId) {
+            return res.status(403).json({ message: 'Not authorized to edit this comment' });
+        }
         if (req.body.comment !== undefined) comment.comment = req.body.comment;
         await product.save();
         res.json(comment);
@@ -129,24 +133,22 @@ router.patch('/:id/comments/:commentId', async (req, res) => {
 });
 
 // Delete a comment
-router.delete('/:id/comments/:commentId', async (req, res) => {
+router.delete('/:id/comments/:commentId', auth, async (req, res) => {
     try {
         const product = await Product.findById(req.params.id);
         if (!product) return res.status(404).json({ message: 'Product not found' });
-        // Debug logging
-        console.log('Attempting to delete commentId:', req.params.commentId);
-        console.log('Product comment IDs:', product.comments.map(c => c._id.toString()));
         const comment = product.comments.id(req.params.commentId);
         if (!comment) {
-            console.log('Comment not found for deletion');
             return res.status(404).json({ message: 'Comment not found' });
         }
-        // Remove the comment using pull
+        // Only allow if admin or comment owner
+        if (req.user.role !== 'admin' && comment.userId.toString() !== req.user.userId) {
+            return res.status(403).json({ message: 'Not authorized to delete this comment' });
+        }
         product.comments.pull({ _id: req.params.commentId });
         await product.save();
         res.json({ message: 'Comment deleted' });
     } catch (err) {
-        console.log('Error deleting comment:', err);
         res.status(400).json({ message: err.message });
     }
 });

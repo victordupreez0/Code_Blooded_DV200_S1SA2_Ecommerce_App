@@ -28,7 +28,8 @@ const Login: React.FC = () => {
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('user', JSON.stringify({
         _id: res.data.user._id,
-        fullName: res.data.user.fullName
+        fullName: res.data.user.fullName,
+        role: res.data.user.role // Save role in localStorage
       }));
       toast({
         title: "Success",

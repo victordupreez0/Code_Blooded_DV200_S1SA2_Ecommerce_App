@@ -6,6 +6,7 @@ import { ShoppingCart } from 'lucide-react';
 const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState<string | null>(null);
   const navigate = useNavigate();
 
   // Check auth state on mount and when localStorage changes
@@ -13,6 +14,17 @@ const Navbar: React.FC = () => {
     const checkAuth = () => {
       const token = localStorage.getItem('token');
       setIsAuthenticated(!!token);
+      const user = localStorage.getItem('user');
+      if (user) {
+        try {
+          const parsed = JSON.parse(user);
+          setUserRole(parsed.role || null);
+        } catch {
+          setUserRole(null);
+        }
+      } else {
+        setUserRole(null);
+      }
     };
     checkAuth();
 
@@ -51,9 +63,11 @@ const Navbar: React.FC = () => {
             <Link to="/link-2" className="border-transparent text-luxury-brown-dark hover:text-luxury-brown-dark px-1 pt-1 font-medium">
               FAQ
             </Link>
-            <Link to="/postLogin" className="border-transparent text-luxury-brown-dark hover:text-luxury-brown-dark px-1 pt-1 font-medium">
-              Admin
-            </Link>
+            {userRole === 'admin' && (
+              <Link to="/postLogin" className="border-transparent text-luxury-brown-dark hover:text-luxury-brown-dark px-1 pt-1 font-medium">
+                Admin
+              </Link>
+            )}
           </div>
           
           <div className="flex items-center">
