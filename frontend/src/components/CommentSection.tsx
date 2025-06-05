@@ -197,7 +197,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
                   {editIdx === idx ? (
                     <span>
                       <input
-                        className="border rounded p-1 mr-2"
+                        className="border-b bg-luxury-brown-darker focus:outline-none focus:ring-0 focus:border-b-luxury-primaryGold p-1 mr-2 text-luxury-white placeholder:text-luxury-white rounded-none"
                         value={editComment}
                         onChange={(e) => setEditComment(e.target.value)}
                       />
