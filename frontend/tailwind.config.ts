@@ -28,10 +28,11 @@ export default {
 						darker: "#181816"
 					},
 					black: "#111111",
-					white: "#ffffff",
+					white: "#F8F3E6",
 					offwhite: "#FFF4E0",
 					primaryGold: "#f9c976",
 					primaryBG: "#3e3629",
+					grey: "#343434",
 					gold: {
 						light: "#E6D2B7",
 						medium: "#DBC19A",
