@@ -40,12 +40,12 @@ const Cart: React.FC = () => {
         ) : (
           <div className="w-full max-w-2xl space-y-4">
             {cart.map(item => (
-              <div key={item._id} className="flex border border-luxury-brown-darker items-center bg-luxury-brown-darker rounded-l shadow p-4 gap-4 text-luxury-white hover:border-luxury-primaryGold">
+              <div key={item._id} className="flex border border-luxury-brown-darker items-center bg-luxury-brown-darker rounded-3xl shadow p-4 gap-4 text-luxury-white hover:border-luxury-primaryGold">
                 {item.imageUrl && (
                   <img
                     src={item.imageUrl.startsWith('http') ? item.imageUrl : `http://localhost:3000${item.imageUrl}`}
                     alt={item.name}
-                    className="w-[160px] h-[80px] object-cover rounded-2xl "
+                    className="w-[160px] h-[80px] object-cover rounded-xl "
                   />
                 )}
                 <div className="flex-1">

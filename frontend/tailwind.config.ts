@@ -30,6 +30,7 @@ export default {
 					black: "#111111",
 					white: "#F8F3E6",
 					offwhite: "#FFF4E0",
+					secondaryBG: "#2a2a28",
 					primaryGold: "#f9c976",
 					primaryBG: "#3e3629",
 					grey: "#343434",
