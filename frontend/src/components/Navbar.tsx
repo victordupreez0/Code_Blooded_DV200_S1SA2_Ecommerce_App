@@ -118,27 +118,63 @@ const Navbar: React.FC = () => {
           >
             Home
           </Link>
-          <Link 
-            to="/link-1"
+          <Link
+            to={isAuthenticated ? "/BrowseProducts" : "/login"}
             onClick={() => setMobileMenuOpen(false)}
             className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-luxury-black hover:bg-luxury-brown-light hover:border-luxury-gold-dark"
           >
-            Link 1
+            Products
           </Link>
-          <Link 
+          <Link
             to="/link-2"
             onClick={() => setMobileMenuOpen(false)}
             className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-luxury-black hover:bg-luxury-brown-light hover:border-luxury-gold-dark"
           >
-            Link 2
+            FAQ
           </Link>
-          <Link 
-            to="/link-3"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-luxury-black hover:bg-luxury-brown-light hover:border-luxury-gold-dark"
-          >
-            Link 3
-          </Link>
+          {userRole === 'admin' && (
+            <Link
+              to="/postLogin"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-luxury-black hover:bg-luxury-brown-light hover:border-luxury-gold-dark"
+            >
+              Admin
+            </Link>
+          )}
+          {isAuthenticated ? (
+            <>
+              <button
+                onClick={() => { handleLogout(); setMobileMenuOpen(false); }}
+                className="block w-full text-left pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-luxury-black hover:bg-luxury-brown-light hover:border-luxury-gold-dark"
+              >
+                Log Out
+              </button>
+              <Link
+                to="/cart"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-luxury-black hover:bg-luxury-brown-light hover:border-luxury-gold-dark"
+              >
+                Cart
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-luxury-black hover:bg-luxury-brown-light hover:border-luxury-gold-dark"
+              >
+                Sign In
+              </Link>
+              <Link
+                to="/register"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-luxury-black hover:bg-luxury-brown-light hover:border-luxury-gold-dark"
+              >
+                Register
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </nav>
