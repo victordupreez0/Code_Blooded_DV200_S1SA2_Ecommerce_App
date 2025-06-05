@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
+import { ShoppingCart } from 'lucide-react';
 
 const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -28,41 +29,50 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="bg-white/80 backdrop-blur-sm border-b border-luxury-brown-light sticky top-0 z-50">
+    <nav className="bg-[#181816]/100 border-b border-luxury-brown-light sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0 flex items-center">
-              <span className="text-luxury-gold-dark font-serif text-2xl font-bold">Billionares</span>
+              <span className="text-luxury-brown-dark font-serif text-2xl font-bold">Billionaires</span>
             </Link>
           </div>
 
           <div className="hidden sm:ml-6 sm:flex sm:space-x-8 mt-4">
-            <Link to="/" className="border-transparent text-luxury-black hover:text-luxury-brown-dark px-1 pt-1 font-medium">
+            <Link to="/" className="border-transparent text-luxury-brown-dark hover:text-luxury-brown-dark px-1 pt-1 font-medium">
               Home
             </Link>
             <Link
-              to={isAuthenticated ? "/postlogin" : "/login"}
-              className="border-transparent text-luxury-black hover:text-luxury-brown-dark px-1 pt-1 font-medium"
+              to={isAuthenticated ? "/BrowseProducts" : "/login"}
+              className="border-transparent text-luxury-brown-dark hover:text-luxury-brown-dark px-1 pt-1 font-medium"
             >
               Products
             </Link>
-            <Link to="/link-2" className="border-transparent text-luxury-black hover:text-luxury-brown-dark px-1 pt-1 font-medium">
+            <Link to="/link-2" className="border-transparent text-luxury-brown-dark hover:text-luxury-brown-dark px-1 pt-1 font-medium">
               FAQ
             </Link>
-            <Link to="/link-3" className="border-transparent text-luxury-black hover:text-luxury-brown-dark px-1 pt-1 font-medium">
-              Contact Us
+            <Link to="/postLogin" className="border-transparent text-luxury-brown-dark hover:text-luxury-brown-dark px-1 pt-1 font-medium">
+              Admin
             </Link>
           </div>
           
           <div className="flex items-center">
             {isAuthenticated ? (
-              <button
-                onClick={handleLogout}
-                className="bg-luxury-black text-white hover:bg-luxury-brown-darker px-4 py-2 rounded-md text-sm font-medium"
-              >
-                Log Out
-              </button>
+              <>
+                <button
+                  onClick={handleLogout}
+                  className="bg-luxury-black text-white hover:bg-luxury-brown-darker px-4 py-2 rounded-md text-sm font-medium"
+                >
+                  Log Out
+                </button>
+                <Link
+                  to="/cart"
+                  className="ml-4 flex items-center justify-center p-2 rounded-md text-luxury-black hover:text-luxury-gold-dark hover:bg-luxury-brown-light transition relative"
+                  title="View Cart"
+                >
+                  <ShoppingCart className="h-6 w-6" />
+                </Link>
+              </>
             ) : (
               <>
                 <Link to="/login" className="text-luxury-black hover:text-luxury-brown-dark font-medium mr-4">

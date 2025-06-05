@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const CommentSchema = new mongoose.Schema({
+    userId: { type: String, required: true },
     username: { type: String, required: true },
     comment: { type: String, required: true },
     hearts: { type: Number, default: 0 }
@@ -21,9 +22,25 @@ const ProductSchema = new mongoose.Schema({
     },
     imageUrl: {
         type: String,
-        required: true // Not all products must have an image
+        required: true 
     },
-    comments: [CommentSchema]
+    comments: [CommentSchema],
+    
+    category: {
+        type: String,
+        required: true
+    },
+
+
+    flagged: {
+        type: Boolean,
+        default: false
+    },
+
+    flagReason: {
+        type: String,
+        default: ''
+    }
 });
 
 module.exports = mongoose.model('Product', ProductSchema);

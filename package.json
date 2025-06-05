@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/victordupreez0/billionare_ecommerce/issues"
   },
-  "homepage": "https://github.com/victordupreez0/billionare_ecommerce#readme"
+  "homepage": "https://github.com/victordupreez0/billionare_ecommerce#readme",
+  "dependencies": {
+    "lucide-react": "^0.511.0"
+  }
 }

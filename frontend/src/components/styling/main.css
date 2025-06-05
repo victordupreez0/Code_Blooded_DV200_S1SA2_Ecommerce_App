@@ -1,0 +1,27 @@
+
+.product-card{
+   transition: all 0.3s ease-in-out;
+  max-width: 450px;
+}
+
+
+.product-card:hover{
+  outline: none !important;
+  scale: 1.05;
+  /* box-shadow: 0 0px 30px rgba(255, 140, 0, 0.489); */
+}
+
+.product-card:hover,
+.product-card:focus,
+.product-card:active,
+.product-card:focus-visible {
+  outline: none !important;
+  border: none !important;
+  --tw-ring-shadow: none !important;
+}
+
+/* Remove Tailwind ring utility if present */
+.product-card:hover, .product-card:focus, .product-card:active, .product-card:focus-visible {
+  --tw-ring-shadow: none !important;
+}
+

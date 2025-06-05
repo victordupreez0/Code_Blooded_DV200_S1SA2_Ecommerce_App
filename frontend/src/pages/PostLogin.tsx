@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import AddProduct from '../components/addProduct';
 
-const Index: React.FC = () => {
+const PostLogin: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -15,4 +15,4 @@ const Index: React.FC = () => {
   );
 };
 
-export default Index;
+export default PostLogin;

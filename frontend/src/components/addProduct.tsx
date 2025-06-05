@@ -6,7 +6,8 @@ function AddProduct() {
     name: '',
     price: '',
     description: '',
-    image: null
+    image: null,
+    category: ''
   });
   const [message, setMessage] = useState('');
   const [view, setView] = useState('add'); // 'add' or 'view'
@@ -30,6 +31,7 @@ function AddProduct() {
       formData.append('name', form.name);
       formData.append('price', form.price);
       formData.append('description', form.description);
+      formData.append('category', form.category);
       if (form.image) {
         formData.append('image', form.image);
       }
@@ -39,7 +41,7 @@ function AddProduct() {
         }
       });
       setMessage('Product created!');
-      setForm({ name: '', price: '', description: '', image: null });
+      setForm({ name: '', price: '', description: '', image: null, category: '' });
     } catch (err) {
       setMessage('Error creating product');
     }
@@ -142,6 +144,21 @@ function AddProduct() {
                   onChange={handleChange}
                 />
               </div>
+              <div>
+                <label className="block mb-1 font-medium">Category</label>
+                <select
+                  className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  name="category"
+                  value={form.category}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Select a category</option>
+                  <option value="Rich">Rich</option>
+                  <option value="Richer">Richer</option>
+                  <option value="Richest">Richest</option>
+                </select>
+              </div>
               <button
                 type="submit"
                 className="w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
@@ -176,7 +193,7 @@ function AddProduct() {
                   {filteredProducts.map(product => (
                     <li
                       key={product._id}
-                      className="flex justify-between items-center p-4 bg-white rounded shadow cursor-pointer hover:bg-gray-100 transition"
+                      className="flex flex-col justify-between h-full p-4 bg-white rounded shadow cursor-pointer hover:bg-gray-100 transition"
                       onClick={() => window.location.href = `/product/${product._id}`}
                     >
                       <div className="flex items-center gap-4">
@@ -189,9 +206,16 @@ function AddProduct() {
                         )}
                         <div>
                           <span className="font-semibold">{product.name}</span>
+                          
+                          
+
                           <span className="ml-2 text-gray-600">${product.price}</span>
+
                           <div className="text-sm text-gray-500">{product.description}</div>
                         </div>
+                        
+                        
+                        
                       </div>
                       <div className="flex gap-2" onClick={e => e.stopPropagation()}>
                         <button
@@ -202,6 +226,16 @@ function AddProduct() {
                           Delete
                         </button>
                       </div>
+
+                        {product.flagged && (
+                          <div className="flex justify-end mt-2">
+                            <span className="bg-red-500 text-white px-2 py-1 rounded text-xs font-bold">Flagged</span>
+                             {product.flagged && product.flagReason && (
+                          <span className="text-xs text-red-700 mt-1"> Reason: {product.flagReason} </span>
+                      
+                          )}
+                          </div>
+                        )}
                     </li>
                   ))}
                 </ul>
