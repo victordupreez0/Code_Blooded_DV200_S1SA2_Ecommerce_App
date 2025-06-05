@@ -5,15 +5,12 @@ import Features from '../components/Features';
 import Footer from '../components/Footer';
 import { useProducts } from '../hooks/useProducts';
 import { Product } from '../types/product';
-import CommentSection from '../components/CommentSection';
 import "../components/styling/main.css";
 import axios from 'axios';
 import { FaFlag } from 'react-icons/fa';
 
 const BrowseProducts: React.FC = () => {
   const { products, loading, error } = useProducts();
-  const [showCommentModal, setShowCommentModal] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
   // Filter products by selected category
@@ -26,7 +23,7 @@ const BrowseProducts: React.FC = () => {
       <Navbar />
       <main className="flex-grow flex">
         {/* Sidebar Filter */}
-        <aside className="fixed top-[80px] left-5 h-fit-content w-52  border-luxury-primaryGold p-4 z-40 hidden md:block">
+        <aside className="fixed top-[80px] left-5 h-fit-content w-52 border-r border-luxury-primaryGold p-4 z-40 hidden md:block">
           <h2 className="text-xl text-luxury-white font-semibold mb-3 tracking-wide uppercase">Filter Products</h2>
           <div className="space-y-6">
             {/* Category Filter */}
@@ -80,8 +77,7 @@ const BrowseProducts: React.FC = () => {
                   key={product._id}
                   className="product-card bg-luxury-black rounded-3xl shadow-md p-4 flex flex-col cursor-pointer group"
                   onClick={() => {
-                    setSelectedProduct(product);
-                    setShowCommentModal(true);
+                    window.location.href = `/product/${product._id}`;
                   }}
                 >
                   <div className="relative group w-full">
@@ -156,7 +152,7 @@ const BrowseProducts: React.FC = () => {
             </div>
           )}
           {/* Modal for Comment Section */}
-          {showCommentModal && selectedProduct && (
+          {/* {showCommentModal && selectedProduct && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
               <div className="bg-white rounded-lg shadow-lg max-w-lg w-full p-6 relative">
                 <button
@@ -170,7 +166,7 @@ const BrowseProducts: React.FC = () => {
                 <CommentSection productId={selectedProduct._id} />
               </div>
             </div>
-          )}
+          )} */}
         </div>
       </main>
       <Footer />

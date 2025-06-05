@@ -161,11 +161,11 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
       )}
       <form onSubmit={handleSubmit} className="flex flex-col gap-2">
         <div className="relative flex items-start gap-2">
-          <p className="username mt-2 text-gray-600 text-left">
+          <p className="username mt-2 text-luxury-primaryGold text-left">
             @{username}
           </p>
           <textarea
-            className="border rounded p-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-400 flex-1 pr-20 text-left"
+            className="border rounded p-2 resize-none text-luxury-white bg-luxury-black focus:outline-none focus:ring-2 focus:ring-luxury-primaryGold flex-1 pr-20 text-left"
             rows={2}
             placeholder="Write a comment..."
             value={comment}
@@ -173,7 +173,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
           />
           <button
             type="submit"
-            className="absolute bottom-2 right-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+            className="absolute bottom-2 right-2 bg-luxury-primaryGold text-white px-4 py-2 rounded hover:bg-luxury-brown-darker transition"
           >
             Post
           </button>
@@ -187,11 +187,11 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
             {comments.map((c, idx) => (
               <li
                 key={c._id}
-                className="comment-row bg-gray-100 p-3 rounded shadow-sm text-gray-800 flex items-center relative"
+                className="comment-row bg-luxury-brown-darker p-3 rounded-3xl shadow-sm text-gray-800 flex items-center relative"
                 style={{ listStyleType: "none", width: "100%" }}
               >
                 <div className="comment-text flex-1 text-left">
-                  <span className="font-semibold text-blue-600">
+                  <span className="font-semibold text-luxury-primaryGold">
                     @{c.username}:&nbsp;
                   </span>
                   {editIdx === idx ? (
