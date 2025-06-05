@@ -171,12 +171,12 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
         </div>
       )}
       <form onSubmit={handleSubmit} className="flex flex-col gap-2">
-        <div className="relative flex items-start gap-2">
+        <div className="relative flex flex-col items-start gap-2">
           <p className="username mt-2 text-luxury-primaryGold text-left">
             @{username}
           </p>
           <textarea
-            className="border rounded p-2 resize-none text-luxury-white bg-luxury-black focus:outline-none focus:ring-2 focus:ring-luxury-primaryGold flex-1 pr-20 text-left"
+            className="border-none rounded-xl p-2 resize-none text-luxury-white bg-luxury-black/50 focus:outline-none focus:ring-2 focus:ring-luxury-primaryGold flex-2 pr-20 text-left placeholder:text-luxury-white"
             rows={2}
             placeholder="Write a comment..."
             value={comment}
@@ -184,7 +184,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
           />
           <button
             type="submit"
-            className="absolute bottom-2 right-2 bg-luxury-primaryGold text-white px-4 py-2 rounded hover:bg-luxury-brown-darker transition"
+            className="absolute bottom-2 right-2 bg-luxury-primaryGold text-black  px-4 py-2 rounded-3xl hover:text-white hover:bg-luxury-brown-darker transition"
           >
             Post
           </button>
@@ -201,7 +201,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
                 className="comment-row bg-luxury-brown-darker p-3 rounded-3xl shadow-sm text-gray-800 flex items-center relative"
                 style={{ listStyleType: "none", width: "100%" }}
               >
-                <div className="comment-text flex-1 text-left">
+                <div className="comment-text text-luxury-white flex-1 text-left">
                   <span className="font-semibold text-luxury-primaryGold">
                     @{c.username}:&nbsp;
                   </span>
