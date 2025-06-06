@@ -9,63 +9,128 @@ import "../components/styling/main.css";
 import axios from 'axios';
 import { FaFlag } from 'react-icons/fa';
 
+
+
+
+
 const BrowseProducts: React.FC = () => {
   const { products, loading, error } = useProducts();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
+  const [minRating, setMinRating] = useState('');
 
-  // Filter products by selected category
-  const filteredProducts = selectedCategory === 'All'
-    ? products
-    : products.filter((product) => product.category === selectedCategory);
+  const getUniqueCategories = (products: Product[]) => {
+  const cat = new Set<string>();
+  products.forEach(p => p.category && cat.add(p.category));
+  return Array.from(cat);
+
+ 
+};
+
+ const resetFilters = () => {
+    setSelectedCategory('All');
+    setMinPrice('');
+    setMaxPrice('');
+    setMinRating('');
+  };
+
+const categories = getUniqueCategories(products);
+
+const filteredProducts = products.filter((product) => {
+  let pass = true;
+  if (selectedCategory !== 'All' && product.category !== selectedCategory) 
+    pass = false;
+    if(minPrice && Number(product.price) < Number(minPrice)) pass = false;
+    if(maxPrice && Number(product.price) > Number(maxPrice)) pass = false; 
+    if(minRating && (!product.rating || product.rating < Number(minRating))) pass = false;
+    return pass;
+  });
+      
+   
+
+  
 
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-grow flex">
         {/* Sidebar Filter */}
-        <aside className="fixed top-[80px] left-5 h-fit-content w-52 border-r border-luxury-primaryGold p-4 z-40 hidden md:block">
-          <h2 className="text-xl text-luxury-white font-semibold mb-3 tracking-wide uppercase">Filter Products</h2>
-          <div className="space-y-6">
-            {/* Category Filter */}
-            <div>
-              <h3 className="font-semibold mb-2 text-luxury-white tracking-wide uppercase text-l">Category</h3>
-              <ul className="space-y-1">
-                {['All', 'Rich', 'Richer', 'Richest'].map((cat) => (
-                  <li key={cat}>
-                    <button
-                        className={`w-full text-left px-2 py-1 transition font-semibold tracking-wide text-md  border-transparent
-                          ${selectedCategory === cat
-                            ? ' text-luxury-primaryGold border-l-luxury-primaryGold hover:bg-luxury-gold-medium hover:text-black transition text-md'
-                            : ' text-luxury-primaryGold hover:bg-luxury-gold-medium hover:text-black transition text-md'}
-                        `}
-                        onClick={() => setSelectedCategory(cat)}
-                        >
-                          {cat}
-                     </button>
-                  </li> 
-                ))}
-              </ul>
-            </div>
-            {/* Price Filter */}
-            <div>
-              <h3 className="font-semibold mb-2 text-luxury-white tracking-wide uppercase text-l">Price</h3>
-              <ul className="space-y-1">
-                <li><button className="w-full text-left px-2 py-1  text-luxury-primaryGold font-semibold hover:bg-luxury-gold-medium hover:text-black transition text-md">Under $1B</button></li>
-                <li><button className="w-full text-left px-2 py-1 text-luxury-primaryGold font-semibold hover:bg-luxury-gold-medium hover:text-black transition text-md">$1B - $100B</button></li>
-                <li><button className="w-full text-left px-2 py-1 text-luxury-primaryGold font-semibold hover:bg-luxury-gold-medium hover:text-black transition text-md">$100B+</button></li>
-              </ul>
-            </div>
-            {/* Rating Filter */}
-            <div>
-              <h3 className="font-semibold mb-2 text-luxury-white tracking-wide uppercase text-l">Rating</h3>
-              <ul className="space-y-1">
-                <li><button className="w-full text-left px-2 py-1 text-luxury-primaryGold font-semibold hover:bg-luxury-gold-medium hover:text-black transition text-md">4★ & up</button></li>
-                <li><button className="w-full text-left px-2 py-1 text-luxury-primaryGold font-semibold hover:bg-luxury-gold-medium hover:text-black transition text-md">3★ & up</button></li>
-                <li><button className="w-full text-left px-2 py-1 text-luxury-primaryGold font-semibold hover:bg-luxury-gold-medium hover:text-black transition text-md">All Ratings</button></li>
-              </ul>
-            </div>
-          </div>
-        </aside>
+       <aside className="fixed top-[80px] left-5 h-fit-content w-52 border-r border-luxury-primaryGold p-4 z-40 hidden md:block">
+  <h2 className="text-xl text-luxury-white font-semibold mb-3 tracking-wide uppercase">Filter Products</h2>
+  <div className="space-y-6">
+    {/* Category Filter */}
+    <div>
+      <h3 className="font-semibold mb-2 text-luxury-white tracking-wide uppercase text-l">Category</h3>
+      <ul className="space-y-1">
+        {categories.map((cat) => (
+          <li key={cat}>
+            <button
+              className={`w-full text-left px-2 py-1 transition font-semibold tracking-wide text-md border-transparent
+                ${selectedCategory === cat
+                  ? 'text-luxury-primaryGold border-l-luxury-primaryGold bg-luxury-gold-medium/10'
+                  : 'text-luxury-primaryGold hover:bg-luxury-gold-medium hover:text-black'}`}
+              onClick={() => setSelectedCategory(cat)}
+            >
+              {cat}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+    {/* Price Filter */}
+    <div>
+      <h3 className="font-semibold mb-2 text-luxury-white tracking-wide uppercase text-l">Price</h3>
+      <div className="flex gap-2 items-center">
+        <input
+          type="number"
+          placeholder="Min"
+          className="w-20 px-2 py-1 rounded border border-luxury-primaryGold bg-white text-black"
+          value={minPrice}
+          onChange={e => setMinPrice(e.target.value)}
+        />
+        <span className="text-luxury-white">-</span>
+        <input
+          type="number"
+          placeholder="Max"
+          className="w-20 px-2 py-1 rounded border border-luxury-primaryGold bg-white text-black"
+          value={maxPrice}
+          onChange={e => setMaxPrice(e.target.value)}
+        />
+      </div>
+    </div>
+    {/* Rating Filter */}
+    <div>
+      <h3 className="font-semibold mb-2 text-luxury-white tracking-wide uppercase text-l">Min Rating</h3>
+      <select
+        className="w-full px-2 py-1 rounded border border-luxury-primaryGold bg-white text-black"
+        value={minRating}
+        onChange={e => setMinRating(e.target.value)}
+      >
+        <option value="">Any</option>
+        <option value="1">1★</option>
+        <option value="2">2★</option>
+        <option value="3">3★</option>
+        <option value="4">4★</option>
+        <option value="5">5★</option>
+      </select>
+    </div>
+    {/* Reset Button */}
+    <button
+      className="w-full mt-2 py-2 bg-luxury-brown-light text-black rounded font-semibold hover:bg-luxury-gold-medium transition"
+      onClick={resetFilters}
+    >
+      Reset Filters
+    </button>
+  </div>
+</aside>
+
+
+
+
+        
+        
         {/* Main Content */}
         <div className="flex-1 p-6 md:ml-64"> {/* <-- Add md:ml-64 here */}
           {loading && <div>Loading products...</div>}
