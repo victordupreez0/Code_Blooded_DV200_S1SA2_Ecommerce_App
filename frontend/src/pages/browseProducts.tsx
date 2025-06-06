@@ -58,7 +58,7 @@ const filteredProducts = products.filter((product) => {
       <main className="flex-grow flex">
         {/* Sidebar Filter */}
        <aside className="fixed top-[80px] left-5 h-fit-content w-52 border-r border-luxury-primaryGold p-4 z-40 hidden md:block">
-  <h2 className="text-xl text-luxury-white font-semibold mb-3 tracking-wide uppercase">Filter Products</h2>
+ 
   <div className="space-y-6">
     {/* Category Filter */}
     <div>
