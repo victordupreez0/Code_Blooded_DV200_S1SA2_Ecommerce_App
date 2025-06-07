@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Product } from '../types/product';
-
+import axios from 'axios';
 interface CartItem extends Product {
   quantity: number;
 }
@@ -11,25 +11,42 @@ const Cart: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
+const fetchCart = async () => {
+  const token = localStorage.getItem('token');
+  if (!token) return;
+  try {
+    const res = await axios.get('http://localhost:3000/api/cart', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    console.log('GET /api/cart response:', res.data); // Add this
+    setCart(res.data?.items || []);
+  } catch (error) {
+    console.error('Fetch cart failed:', error.response?.data || error.message); // Add this
+  }
+};
+          
+useEffect(() => {
+  fetchCart();
+}, []);
+
+
+ const handleRemoveFromCart = async (productId: string) => {
     const token = localStorage.getItem('token');
-    const user = localStorage.getItem('user');
-    if (!token || !user) {
-      setIsAuthenticated(false);
-      navigate('/login');
-      return;
+    if (!token) return;
+    try {
+      await axios.delete(`http://localhost:3000/api/cart/remove/${productId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      // Refetch cart after removal
+      await fetchCart();
+    } catch (error) {
+      console.error('Remove from cart failed:', error.response?.data || error.message);
     }
-    setIsAuthenticated(true);
-    const userId = JSON.parse(user)._id;
-    const stored = localStorage.getItem(`cart_${userId}`);
-    if (stored) {
-      setCart(JSON.parse(stored));
-    }
-  }, [navigate]);
+  }; 
+      
+    
 
-  if (!isAuthenticated) return null;
-
-  return (
+return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-luxury-brown-light/50 to-white p-6">
       <h1 className="text-4xl font-bold mb-6 text-luxury-black">Your Cart</h1>
       {cart.length === 0 ? (
@@ -50,7 +67,15 @@ const Cart: React.FC = () => {
                 <div className="text-gray-600">{item.description}</div>
                 <div className="text-green-700 font-bold mt-1">${item.price.toLocaleString()}</div>
               </div>
-              <div className="text-luxury-black font-medium">Qty: {item.quantity}</div>
+              <div className="flex items-center gap-2">
+                <span className="text-luxury-black font-medium">Qty: {item.quantity}</span>
+                <button
+                  className="ml-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-700 transition"
+                  onClick={() => handleRemoveFromCart(item._id)}
+                >
+                  Remove
+                </button>
+              </div>
             </div>
           ))}
         </div>
