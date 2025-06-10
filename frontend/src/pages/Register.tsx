@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Eye, EyeOff, Check } from 'lucide-react';
+import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '../hooks/use-toast.ts';
 import axios from 'axios';
 import Navbar from '../components/Navbar.tsx';
@@ -26,7 +26,6 @@ const Register: React.FC = () => {
   };
 
   const validatePassword = (password: string): boolean => {
-    // At least 8 characters, one uppercase, one lowercase, one number
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
     return regex.test(password);
   };
@@ -64,19 +63,28 @@ const Register: React.FC = () => {
     }
 
     try {
-      await axios.post('http://localhost:3000/auth/register', {
+      const response = await axios.post('http://localhost:3000/auth/register', {
         fullName,
         email,
         password
       });
+      const { token, user } = response.data;
+      console.log('Register successful, storing token:', token, 'User:', user);
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify({
+        _id: user._id,
+        fullName: user.fullName,
+        role: user.role
+      }));
       toast({
         title: "Success",
-        description: "Account created successfully. Redirecting to login...",
+        description: "Account created successfully. Redirecting to products...",
       });
       setTimeout(() => {
-        navigate('/login');
+        navigate('/browseProducts');
       }, 1200);
     } catch (err: any) {
+      console.error('Registration failed:', err.response?.data || err.message);
       toast({
         title: "Registration Failed",
         description: err.response?.data?.message || "An error occurred",

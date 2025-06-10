@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // Add useNavigate
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '../hooks/use-toast.ts';
 import axios from 'axios';
@@ -10,11 +10,10 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const { toast } = useToast();
-  const navigate = useNavigate(); // For redirect
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!email || !password) {
       toast({
         title: "Error",
@@ -26,20 +25,28 @@ const Login: React.FC = () => {
 
     try {
       const res = await axios.post('http://localhost:3000/auth/login', { email, password });
-      localStorage.setItem('token', res.data.token);
+      const { token, user } = res.data;
+      console.log('Login successful, storing token:', token, 'User:', user);
+      localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify({
-        _id: res.data.user._id,
-        fullName: res.data.user.fullName,
-        role: res.data.user.role // Save role in localStorage
+        _id: user._id,
+        fullName: user.fullName,
+        role: user.role
       }));
       toast({
         title: "Success",
         description: "Login successful. Redirecting...",
       });
       setTimeout(() => {
-        navigate('/browseProducts'); // Redirect after login
+        navigate('/browseProducts');
       }, 1000);
     } catch (err: any) {
+      console.error('Login failed:', err.response?.data || err.message);
+      if (err.response?.status === 401) {
+        console.log('Unauthorized, clearing localStorage');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+      }
       toast({
         title: "Login Failed",
         description: err.response?.data?.message || "An error occurred",
