@@ -33,19 +33,19 @@ const Cart: React.FC = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen flex flex-col items-center justify-center bg-luxury-black p-6">
-        <h1 className="text-4xl font-bold mb-6 text-luxury-white">Your Cart</h1>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-luxury-brown-light/50 to-luxury-primaryGold p-6">
+        <h1 className="text-4xl font-bold mb-6 text-luxury-black">Your Cart</h1>
         {cart.length === 0 ? (
           <p className="text-lg text-luxury-brown-dark">Your cart is currently empty.</p>
         ) : (
           <div className="w-full max-w-2xl space-y-4">
             {cart.map(item => (
-              <div key={item._id} className="flex border border-luxury-brown-darker items-center bg-luxury-brown-darker rounded-3xl shadow p-4 gap-4 text-luxury-white hover:border-luxury-primaryGold">
+              <div key={item._id} className="flex border border-luxury-brown-darker items-center bg-luxury-brown-darker/80 rounded-3xl shadow p-4 gap-4 text-luxury-white hover:border-luxury-primaryGold">
                 {item.imageUrl && (
                   <img
                     src={item.imageUrl.startsWith('http') ? item.imageUrl : `http://localhost:3000${item.imageUrl}`}
                     alt={item.name}
-                    className="w-[160px] h-[80px] object-cover rounded-xl "
+                    className="w-[80px] h-[60px] object-cover rounded-xl "
                   />
                 )}
                 <div className="flex-1">

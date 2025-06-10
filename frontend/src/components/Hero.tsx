@@ -1,11 +1,16 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Bitcoin from '../assets/Bitcoin.png';
+import BrowseProducts from '@/pages/browseProducts';  
+
+
 
 const Hero: React.FC = () => {
+  const isAuthenticated = Boolean(localStorage.getItem('token'));
+  const navigate = useNavigate();
   return (
-    <div className="bg-[linear-gradient(90deg,#938463_0%,#4b3a1a_100%)] flex items-center">
+    <div className="bg-gradient-to-b from-luxury-brown-light/50 to-luxury-primaryGold flex items-center">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="lg:grid lg:grid-cols-12 lg:gap-8">
           <div className="sm:text-center md:max-w-2xl md:mx-auto lg:col-span-6 lg:text-left">
@@ -18,13 +23,18 @@ const Hero: React.FC = () => {
             </p>
             <div className="mt-8 sm:max-w-lg sm:mx-auto sm:text-center lg:text-left lg:mx-0">
               <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center lg:justify-start">
-                <Link to="/login" className="bg-luxury-black text-white hover:bg-luxury-brown-darker px-6 py-3 rounded-md text-base font-medium inline-flex items-center transition-colors">
-                  Log-in
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-                <Link to="/learn-more" className="bg-white text-luxury-black border border-luxury-brown-light hover:bg-luxury-brown-light px-6 py-3 rounded-md text-base font-medium transition-colors">
-                  Learn more
-                </Link>
+                <button
+                  onClick={() => {
+                    if (isAuthenticated) {
+                      navigate('/BrowseProducts');
+                    } else {
+                      navigate('/login');
+                    }
+                  }}
+                  className="bg-black text-luxury-primaryGold border border-luxury-brown-light hover:bg-luxury-brown-light px-6 py-3 rounded-md text-base font-medium transition-colors"
+                >
+                  Start Shopping
+                </button>
               </div>
             </div>
           </div>

@@ -1,4 +1,3 @@
-
 .product-card{
    transition: all 0.3s ease-in-out;
   max-width: 450px;
@@ -23,5 +22,16 @@
 /* Remove Tailwind ring utility if present */
 .product-card:hover, .product-card:focus, .product-card:active, .product-card:focus-visible {
   --tw-ring-shadow: none !important;
+}
+
+/* Chrome, Safari, Edge */
+input:-webkit-autofill,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #181816 inset !important; /* bg-luxury-black */
+  -webkit-text-fill-color: #fff !important;
+  caret-color: #fff !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
 

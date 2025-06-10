@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'; // Add useNavigate
 import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '../hooks/use-toast.ts';
 import axios from 'axios';
+import Navbar from '../components/Navbar.tsx';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -48,7 +49,10 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gradient-to-b from-luxury-brown-light/50 to-white">
+
+    <>
+    <Navbar />
+    <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gradient-to-b from-luxury-brown-light/50 to-luxury-primaryGold">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="text-center text-3xl font-extrabold text-luxury-black">Sign in to your account</h2>
         <p className="mt-2 text-center text-sm text-luxury-brown-dark">
@@ -60,14 +64,15 @@ const Login: React.FC = () => {
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-luxury-brown-light">
+        <div className="bg-luxury-primaryBG py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-luxury-brown-light">
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-luxury-black">
+              <label htmlFor="email" className="block text-sm font-medium text-luxury-white">
                 Email address
               </label>
               <div className="mt-1">
-                <input
+                <input 
+                 className="luxury-input w-full bg-luxury-black text-white placeholder:text-luxury-white"
                   id="email"
                   name="email"
                   type="email"
@@ -75,14 +80,14 @@ const Login: React.FC = () => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="luxury-input w-full"
                   placeholder="name@example.com"
+                  
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-luxury-black">
+              <label htmlFor="password" className="block text-sm font-medium text-luxury-white">
                 Password
               </label>
               <div className="mt-1 relative">
@@ -94,7 +99,8 @@ const Login: React.FC = () => {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="luxury-input w-full pr-10"
+                  className="luxury-input w-full bg-luxury-black text-white placeholder:text-luxury-white focus:border-luxury-primaryGold"
+// ...other props
                 />
                 <button
                   type="button"
@@ -140,7 +146,7 @@ const Login: React.FC = () => {
             </div>
           </form>
 
-          <div className="mt-6">
+          {/* <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-luxury-brown-light"></div>
@@ -168,11 +174,12 @@ const Login: React.FC = () => {
                 </a>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
-  );
+    </>
+  ); 
 };
 
 export default Login;

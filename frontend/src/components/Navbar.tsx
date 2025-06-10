@@ -75,13 +75,13 @@ const Navbar: React.FC = () => {
               <>
                 <button
                   onClick={handleLogout}
-                  className="bg-luxury-secondaryBG text-white hover:bg-luxury-brown-darker px-4 py-2 rounded-md text-sm font-medium"
+                  className="bg-luxury-secondaryBG text-luxury-primaryGold hover:bg-luxury-brown-darker px-4 py-2 rounded-md text-sm font-medium"
                 >
                   Log Out
                 </button>
                 <Link
                   to="/cart"
-                  className="ml-4 flex items-center justify-center p-2 rounded-md text-luxury-white hover:text-luxury-gold-dark hover:bg-luxury-brown-light transition relative"
+                  className="ml-4 flex items-center justify-center p-2 rounded-md text-luxury-primaryGold hover:text-luxury-gold-dark hover:bg-luxury-brown-light transition relative"
                   title="View Cart"
                 >
                   <ShoppingCart className="h-6 w-6" />
@@ -89,10 +89,10 @@ const Navbar: React.FC = () => {
               </>
             ) : (
               <>
-                <Link to="/login" className="text-luxury-black hover:text-luxury-brown-dark font-medium mr-4">
+                <Link to="/login" className="text-luxury-primaryGold hover:text-luxury-brown-dark font-medium mr-4">
                   Sign In
                 </Link>
-                <Link to="/register" className="bg-luxury-black text-white hover:bg-luxury-brown-darker px-4 py-2 rounded-md text-sm font-medium">
+                <Link to="/register" className="bg-luxury-black text-luxury-primaryGold hover:bg-luxury-primaryGold hover:text-luxury-black px-4 py-2 rounded-md p2 font-medium">
                   Register
                 </Link>
               </>
@@ -114,21 +114,21 @@ const Navbar: React.FC = () => {
           <Link 
             to="/"
             onClick={() => setMobileMenuOpen(false)}
-            className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-luxury-black hover:bg-luxury-brown-light hover:border-luxury-gold-dark"
+            className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-luxury-primaryGold  hover:bg-luxury-black hover:border-luxury-gold-dark"
           >
             Home
           </Link>
           <Link
             to={isAuthenticated ? "/BrowseProducts" : "/login"}
             onClick={() => setMobileMenuOpen(false)}
-            className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-luxury-black hover:bg-luxury-brown-light hover:border-luxury-gold-dark"
+            className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-luxury-primaryGold hover:bg-luxury-brown-light hover:border-luxury-gold-dark"
           >
             Products
           </Link>
           <Link
             to="/link-2"
             onClick={() => setMobileMenuOpen(false)}
-            className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-luxury-black hover:bg-luxury-brown-light hover:border-luxury-gold-dark"
+            className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-luxury-primaryGold  hover:bg-luxury-brown-light hover:border-luxury-gold-dark"
           >
             FAQ
           </Link>
@@ -136,7 +136,7 @@ const Navbar: React.FC = () => {
             <Link
               to="/postLogin"
               onClick={() => setMobileMenuOpen(false)}
-              className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-luxury-black hover:bg-luxury-brown-light hover:border-luxury-gold-dark"
+              className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-luxury-primaryGold  hover:bg-luxury-brown-light hover:border-luxury-gold-dark"
             >
               Admin
             </Link>
@@ -145,34 +145,34 @@ const Navbar: React.FC = () => {
             <>
               <button
                 onClick={() => { handleLogout(); setMobileMenuOpen(false); }}
-                className="block w-full text-left pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-luxury-black hover:bg-luxury-brown-light hover:border-luxury-gold-dark"
+                className="block w-full text-left pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-luxury-primaryGold  hover:bg-luxury-brown-light hover:border-luxury-gold-dark"
               >
                 Log Out
               </button>
-              <Link
+              {/* <Link
                 to="/cart"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-luxury-black hover:bg-luxury-brown-light hover:border-luxury-gold-dark"
+                className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-luxury-primaryGold  hover:bg-luxury-brown-light hover:border-luxury-gold-dark"
               >
                 Cart
-              </Link>
+              </Link> */}
             </>
           ) : (
             <>
               <Link
                 to="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-luxury-black hover:bg-luxury-brown-light hover:border-luxury-gold-dark"
+                className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-luxury-primaryGold hover:bg-luxury-brown-dark hover:border-luxury-gold-dark"
               >
                 Sign In
               </Link>
-              <Link
+              {/* <Link
                 to="/register"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-luxury-black hover:bg-luxury-brown-light hover:border-luxury-gold-dark"
+                className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-luxury-primaryGold  hover:bg-luxury-brown-light hover:border-luxury-gold-dark"
               >
                 Register
-              </Link>
+              </Link> */}
             </>
           )}
         </div>
