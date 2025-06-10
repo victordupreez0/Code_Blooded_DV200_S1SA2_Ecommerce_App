@@ -41,6 +41,11 @@ const ProductSchema = new mongoose.Schema({
     flagReason: {
         type: String,
         default: ''
+    },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     }
 });
 

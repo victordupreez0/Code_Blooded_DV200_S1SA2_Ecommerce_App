@@ -6,6 +6,34 @@ import Footer from './Footer';
 import CommentSection from './CommentSection';
 import { FaFlag } from 'react-icons/fa';
 
+const handleAddToCart = async (productId: string, quantity = 1) => {
+    console.log('Adding productId:', productId, 'Token present:', !!localStorage.getItem('token'));
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.log('No token found, redirecting to login');
+      window.location.href = '/login';
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      return;
+    }
+    try {
+      const res = await axios.post('http://localhost:3000/api/cart/add', { productId, quantity }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      console.log('Add to cart response:', res.data);
+    } catch (error: any) {
+      console.error('Add to cart failed:', error.response?.data || error.message);
+      if (error.response?.status === 401) {
+        console.log('Unauthorized, clearing token and redirecting to login');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/login';
+      } else {
+        console.error('Add to cart error details:', error.response?.data);
+      }
+    }
+  };
+
 const ViewProduct = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -26,6 +54,8 @@ const ViewProduct = () => {
     };
     fetchProduct();
   }, [id]);
+
+  
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -59,6 +89,21 @@ const ViewProduct = () => {
                   title="Flag this product"
                 >
                   <FaFlag className="text-red-500" size={18} />
+                </button>
+                <button
+                  className="bg-luxury-primaryGold text-black hover:text-white px-3 py-1 rounded-3xl hover:bg-luxury-brown-darker transition self-start flex items-center gap-2 mt-2"
+                  title="Add to cart"
+                  
+                  onClick={e => {
+                        e.stopPropagation();
+                        handleAddToCart(product._id, 1);
+                      }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
+                    <circle cx="9" cy="21" r="1.5" />
+                    <circle cx="19" cy="21" r="1.5" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.5 3H4l2.68 13.39A2 2 0 008.62 18h8.76a2 2 0 001.94-1.61L21.5 6H6" />
+                  </svg>
                 </button>
                 {/* Add more vertically stacked action buttons here if needed */}
               </div>

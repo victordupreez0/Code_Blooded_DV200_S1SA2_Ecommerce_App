@@ -111,7 +111,7 @@ const BrowseProducts: React.FC = () => {
                 />
               </div>
             </div>
-            <div>
+            {/* <div>
               <h3 className="font-semibold mb-2 text-luxury-white tracking-wide uppercase text-l">Min Rating</h3>
               <select
                 className="w-full px-2 py-1 rounded border border-luxury-primaryGold bg-white text-black"
@@ -125,7 +125,7 @@ const BrowseProducts: React.FC = () => {
                 <option value="4">4★</option>
                 <option value="5">5★</option>
               </select>
-            </div>
+            </div> */}
             <button
               className="w-full mt-2 py-2 bg-luxury-brown-light text-black rounded font-semibold hover:bg-luxury-gold-medium transition"
               onClick={resetFilters}

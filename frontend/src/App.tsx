@@ -10,6 +10,7 @@ import PostLogin from "./pages/PostLogin";
 import ViewProduct from "./components/viewProduct";
 import BrowseProducts from "./pages/browseProducts";
 import Cart from "./pages/Cart";
+import Dashboard from "./pages/Dasboard";
 
 
 const queryClient = new QueryClient();
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/product/:id" element={<ViewProduct />} />
           <Route path="/browseProducts" element={<BrowseProducts />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/Dashboard" element={<Dashboard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

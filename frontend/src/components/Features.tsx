@@ -13,38 +13,28 @@ const Features: React.FC = () => {
 
 useEffect(() => {
   const fetchProducts = async () => {
+    let headers = {};
     const token = localStorage.getItem('token');
-    if(!token){
-      console.log('No token found');
-      navigate('/login');
-      return;
+    if (token) {
+      headers = { Authorization: `Bearer ${token}` };
     }
-
     try {
       const response = await axios.get('http://localhost:3000/products', {
-          headers: { Authorization: `Bearer ${token}` },
+        headers,
       });
       //Randomize
       const shuffled = response.data.sort(() => 0.5 - Math.random());
       const selectedProducts = shuffled.slice(0,5);
       setProducts(selectedProducts);
-        setLoading(false);
-    }catch(err:any) {
+      setLoading(false);
+    } catch(err:any) {
       console.error('Failed to fetch products:', err.response?.data || err.message);
-      if (err.response?.status === 401) {
-              console.log('Unauthorized, clearing token and redirecting to login');
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
-          navigate('/login');
-        } else {
-          setError('Failed to load products');
-          setLoading(false);
-        }
-      }
-    };
-
-fetchProducts();
-  }, [navigate]);
+      setError('Failed to load products');
+      setLoading(false);
+    }
+  };
+  fetchProducts();
+}, [navigate]);
 
   if (loading) {
     return <div className="py-20 bg-primaryBG text-center text-luxury-white">Loading products...</div>;
@@ -57,22 +47,36 @@ fetchProducts();
   return (
     <div className="py-20 bg-primaryBG">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl font-extrabold text-luxury-black text-center mb-10">Featured Products</h2>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
+        <h2 className="text-3xl font-extrabold text-luxury-primaryGold text-center mb-10">Featured Products</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
           {products.map((product) => (
-            <div key={product._id} className="flex flex-col items-center">
-              <div className="w-20 h-20 bg-luxury-brown-light rounded-full flex items-center justify-center mb-4 overflow-hidden">
+            <div
+              key={product._id}
+              className="product-card bg-luxury-black rounded-3xl shadow-md p-4 flex flex-col cursor-pointer group"
+              onClick={() => navigate(`/product/${product._id}`)}
+            >
+              <div className="relative group w-full">
                 {product.imageUrl && (
                   <img
                     src={product.imageUrl.startsWith('http') ? product.imageUrl : `http://localhost:3000${product.imageUrl}`}
                     alt={product.name}
-                    className="w-full h-full object-cover"
-                    onError={(e) => (e.currentTarget.src = '/placeholder-image.jpg')} // Fallback image
+                    className="h-40 w-full object-cover rounded-xl mb-5"
+                    onError={e => (e.currentTarget.style.display = 'none')}
                   />
                 )}
               </div>
-              <h3 className="text-lg font-medium text-luxury-black mb-1">{product.name}</h3>
-              <p className="text-sm text-luxury-brown-dark text-center">${product.price.toLocaleString()}</p>
+              <h3 className="text-lg text-luxury-white font-semibold mb-1">{product.name}</h3>
+              <p className="text-luxury-offwhite mb-2 line-clamp-2">{product.description}</p>
+              <div className="flex items-center justify-between mt-auto">
+                {product.rating && (
+                  <span className="ml-2 text-yellow-500">{'★'.repeat(Math.round(product.rating))}</span>
+                )}
+              </div>
+              <div className="flex items-center justify-between mt-5 gap-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xl p-1 text-luxury-primaryGold font-bold text-green-700">${product.price.toLocaleString()}</span>
+                </div>
+              </div>
             </div>
           ))}
         </div>

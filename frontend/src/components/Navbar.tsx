@@ -60,8 +60,8 @@ const Navbar: React.FC = () => {
             >
               Products
             </Link>
-            <Link to="/link-2" className="border-transparent text-luxury-brown-dark hover:text-luxury-brown-dark px-1 pt-1 font-medium">
-              FAQ
+            <Link to="/Dashboard" className="border-transparent text-luxury-brown-dark hover:text-luxury-brown-dark px-1 pt-1 font-medium">
+              Dashboard
             </Link>
             {userRole === 'admin' && (
               <Link to="/postLogin" className="border-transparent text-luxury-brown-dark hover:text-luxury-brown-dark px-1 pt-1 font-medium">

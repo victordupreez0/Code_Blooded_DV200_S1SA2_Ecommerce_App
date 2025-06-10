@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const Product = require('../models/product.js');
 const multer = require('multer');
 const path = require('path');
@@ -45,12 +46,16 @@ router.post ('/', upload.single('image'), async (req, res) => {
    if (req.file) {
      imageUrl = `/uploads/${req.file.filename}`;
    }
+   // The userId field below links the product to the user who uploaded it.
+   // This allows us to later filter products by user, so each user only sees/manages their own products in the dashboard.
+   // The userId is sent from the frontend and should match the _id of the logged-in user.
    const product = new Product ({
     name: req.body.name,
     price: req.body.price,
     description: req.body.description,
     imageUrl: imageUrl, // Always save the imageUrl to the database
-    category: req.body.category
+    category: req.body.category,
+    userId: req.body.userId // <-- Link product to user who uploaded it
    })
 
    try{
@@ -63,20 +68,24 @@ router.post ('/', upload.single('image'), async (req, res) => {
 
 
 // Updating a Product
-router.patch ('/:id', getProduct, async (req, res) => {
-
+router.patch('/:id', getProduct, upload.single('image'), async (req, res) => {
     if (req.body.name != null) {
-        res.product.name = req.body.name
+        res.product.name = req.body.name;
     }
     if (req.body.price != null) {
-        res.product.price = req.body.price
+        res.product.price = req.body.price;
     }
     if (req.body.description != null) {
-        res.product.description = req.body.description
+        res.product.description = req.body.description;
     }
-
+    if (req.body.category != null) {
+        res.product.category = req.body.category;
+    }
+    if (req.file) {
+        res.product.imageUrl = `/uploads/${req.file.filename}`;
+    }
     try {
-        const updatedProduct = await res.product.save()
+        const updatedProduct = await res.product.save();
         res.json(updatedProduct);
     } catch (err) {
         res.status(400).json({ message: err.message });
@@ -207,8 +216,6 @@ router.post('/flagged',async (req, res) => {
     }
     
 });
-
-
 
 // Middelware
 async function getProduct(req, res, next) {
