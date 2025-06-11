@@ -206,9 +206,9 @@ const Dashboard: React.FC = () => {
         {/* Modal for Add Product */}
         {showModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg relative">
+            <div className="bg-luxury-primaryBG rounded-lg shadow-lg p-8 w-full max-w-lg relative">
               <button
-                className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-2xl font-bold"
+                className="absolute top-2 right-2 text-luxury-primaryGold hover:text-white text-2xl font-bold"
                 onClick={() => { setShowModal(false); setEditProduct(null); }}
                 aria-label="Close"
               >
@@ -217,24 +217,24 @@ const Dashboard: React.FC = () => {
               <h2 className="text-xl font-bold mb-4 text-luxury-primaryGold">{editProduct ? 'Edit Product' : 'Add Product'}</h2>
               <form onSubmit={editProduct ? handleUpdate : handleSubmit} className="space-y-4" encType="multipart/form-data">
                 <div>
-                  <label className="block mb-1 font-medium">Name</label>
-                  <input type="text" className="w-full border border-gray-300 rounded px-3 py-2" name="name" value={form.name} onChange={handleChange} required />
+                  <label className="block mb-1 font-medium text-white">Name</label>
+                  <input type="text" className="luxury-input w-full bg-luxury-black/40 text-white placeholder:text-luxury-white/25" name="name" value={form.name} onChange={handleChange} required />
                 </div>
                 <div>
-                  <label className="block mb-1 font-medium">Price</label>
-                  <input type="number" className="w-full border border-gray-300 rounded px-3 py-2" name="price" value={form.price} onChange={handleChange} required />
+                  <label className="block mb-1 font-medium text-white">Price</label>
+                  <input type="number" className="luxury-input w-full bg-luxury-black/40 text-white placeholder:text-luxury-white/25" name="price" value={form.price} onChange={handleChange} required />
                 </div>
                 <div>
-                  <label className="block mb-1 font-medium">Description</label>
-                  <textarea className="w-full border border-gray-300 rounded px-3 py-2" name="description" value={form.description} onChange={handleChange} required />
+                  <label className="block mb-1 font-medium text-white">Description</label>
+                  <textarea className="luxury-input w-full bg-luxury-black/40 text-white placeholder:text-luxury-white/25" name="description" value={form.description} onChange={handleChange} required />
                 </div>
                 <div>
-                  <label className="block mb-1 font-medium">Image</label>
-                  <input type="file" className="w-full border border-gray-300 rounded px-3 py-2" name="image" accept="image/*" onChange={handleChange} />
+                  <label className="block mb-1 font-medium text-white">Image</label>
+                  <input type="file" className="luxury-input w-full bg-luxury-black/40 text-white/45 rounded border border-luxury-primaryGold file:bg-black file:text-white file:rounded-xl file:border-0 file:px-4 file:py-2 file:cursor-pointer file:font-medium file:transition file:hover:bg-luxury-brown-darker placeholder:text-luxury-white/25" name="image" accept="image/*" onChange={handleChange} />
                 </div>
                 <div>
-                  <label className="block mb-1 font-medium">Category</label>
-                  <select className="w-full border border-gray-300 rounded px-3 py-2" name="category" value={form.category} onChange={handleChange} required>
+                  <label className="block mb-1 font-medium text-white">Category</label>
+                  <select className="luxury-input w-full bg-luxury-black/40 text-white placeholder:text-luxury-white/25" name="category" value={form.category} onChange={handleChange} required>
                     <option value="">Select a category</option>
                     <option value="Vehicle">Vehicle</option>
                     <option value="Property">Property</option>
