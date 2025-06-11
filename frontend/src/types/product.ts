@@ -6,4 +6,8 @@ export interface Product {
   imageUrl: string; // match backend
   category?: string;
   rating?: number;
+  status?: 'pending' | 'approved' | 'denied';
+  approved?: boolean;
+  flagged?: boolean;
+  flagReasons?: string[];
 }

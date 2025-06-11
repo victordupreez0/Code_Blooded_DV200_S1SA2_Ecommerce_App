@@ -40,6 +40,9 @@ const ViewProduct = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showFlagModal, setShowFlagModal] = useState(false);
+  const [flagReason, setFlagReason] = useState('');
+  const [flagMessage, setFlagMessage] = useState('');
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -60,6 +63,59 @@ const ViewProduct = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
+      {/* Flag Reason Modal */}
+      {showFlagModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-[#fe7b00] rounded-2xl shadow-lg p-6 w-full max-w-md relative text-white">
+            <button
+              className="absolute top-2 right-2 text-white hover:text-gray-200 text-2xl font-bold"
+              onClick={() => setShowFlagModal(false)}
+              aria-label="Close"
+            >
+              &times;
+            </button>
+            <h2 className="text-xl font-bold mb-4">Flag Product</h2>
+            <label className="block mb-2 font-medium">Reason for flagging:</label>
+            <textarea
+              className="w-full border border-gray-300 rounded px-3 py-2 mb-4 bg-[#fe7b00] text-white placeholder:text-white/70"
+              value={flagReason}
+              onChange={e => setFlagReason(e.target.value)}
+              placeholder="Enter reason..."
+              rows={3}
+              autoFocus
+            />
+            {flagMessage && <div className="mb-2 text-green-200 font-medium">{flagMessage}</div>}
+            <div className="flex gap-2 justify-end">
+              <button
+                className="px-4 py-2 bg-white/20 text-white rounded hover:bg-white/30"
+                onClick={() => setShowFlagModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                onClick={async () => {
+                  if (!flagReason.trim()) return;
+                  try {
+                    await axios.post(`http://localhost:3000/products/${product._id}/flag`, { reason: flagReason });
+                    setFlagMessage('Product flagged successfully!');
+                    setTimeout(() => {
+                      setShowFlagModal(false);
+                      setFlagReason('');
+                      setFlagMessage('');
+                    }, 1200);
+                  } catch {
+                    setFlagMessage('Failed to flag product.');
+                  }
+                }}
+                disabled={!flagReason.trim()}
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <main className="flex-1 flex flex-col items-center bg-luxury-black py-10">
        
         <div className="flex-1 flex justify-center items-center w-full">
@@ -78,13 +134,9 @@ const ViewProduct = () => {
                 </button>
                 <button
                   className="bg-luxury-primaryGold text-black hover:text-white px-4 py-2 rounded-3xl hover:bg-luxury-brown-darker transition self-start flex items-center gap-2"
-                  onClick={async (e) => {
+                  onClick={e => {
                     e.stopPropagation();
-                    const reason = prompt('why flag this');
-                    if (reason) {
-                      await axios.post(`http://localhost:3000/products/${product._id}/flag`, { reason });
-                      alert('Product flagged success');
-                    }
+                    setShowFlagModal(true);
                   }}
                   title="Flag this product"
                 >

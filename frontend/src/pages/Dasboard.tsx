@@ -38,9 +38,8 @@ const Dashboard: React.FC = () => {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:3000/products');
-      // Only show products where product.userId === userId
-      setProducts(res.data.filter((p: any) => p.userId === userId));
+      const res = await axios.get(`http://localhost:3000/products/user/${userId}`);
+      setProducts(res.data);
     } catch (err) {
       setMessage('Error fetching products');
     }
@@ -75,7 +74,7 @@ const Dashboard: React.FC = () => {
       await axios.post('http://localhost:3000/products', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      setMessage('Product created!');
+      setMessage('Product under review!');
       setForm({ name: '', price: '', description: '', image: null, category: '' });
       fetchProducts();
     } catch (err) {
@@ -168,6 +167,15 @@ const Dashboard: React.FC = () => {
                       <h3 className="text-lg text-luxury-white font-semibold mb-1 break-words whitespace-pre-line">{product.name}</h3>
                       <p className="text-luxury-offwhite mb-1 break-words whitespace-pre-line text-sm" style={{ maxHeight: '4rem', overflowY: 'auto' }}>{product.description}</p>
                       <span className="text-xs text-luxury-primaryGold font-medium">{product.category}</span>
+                      {product.status === 'pending' && (
+                        <span className="ml-2 text-yellow-500 font-bold">Pending Review</span>
+                      )}
+                      {product.status === 'denied' && (
+                        <span className="ml-2 text-red-500 font-bold">Denied</span>
+                      )}
+                      {product.status === 'approved' && (
+                        <span className="ml-2 text-green-500 font-bold">Approved</span>
+                      )}
                     </div>
                     <div className="flex flex-row sm:flex-col items-end justify-between sm:ml-4 w-full sm:w-auto gap-2 mt-2 sm:mt-0">
                       <span className="text-xl text-luxury-primaryGold font-bold">${product.price.toLocaleString()}</span>
