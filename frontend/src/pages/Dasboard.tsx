@@ -249,7 +249,7 @@ const Dashboard: React.FC = () => {
                     <option value="Miscellaneous">Miscellaneous</option>
                   </select>
                 </div>
-                <button type="submit" className="w-full py-2 bg-luxury-primaryGold text-luxury-black rounded hover:bg-yellow-400 transition font-semibold">{editProduct ? 'Update Product' : 'Add Product'}</button>
+                <button type="submit" className="w-full py-2 bg-luxury-primaryGold text-luxury-black rounded hover:bg-black hover:text-white transition font-semibold">{editProduct ? 'Update Product' : 'Add Product'}</button>
                 {message && <div className="mt-2 p-2 rounded bg-blue-100 text-blue-800 border border-blue-300">{message}</div>}
               </form>
             </div>
