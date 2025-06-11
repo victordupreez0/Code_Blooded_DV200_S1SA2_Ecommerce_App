@@ -149,7 +149,7 @@ Session management ensures secure user access to dashboards and marketplace feat
 - Filtering system allows sorting by price range and product category
 
 
-### Reviews and Testing
+## Reviews and Testing
 
 Throughout development, our team followed a collaborative testing approach to ensure a smooth and reliable experience for users.
 
@@ -167,7 +167,7 @@ Allowed for rapid iteration and agile problem-solving
 Ensured that every feature worked as intended across the team before final integration
 
 
-### Future Implementation
+## Future Implementation
 We’ve laid a strong foundation for Billionaire$, and we’re excited to expand its features and scale the platform. Here’s what’s next:
 
 #### Secure Payment Integration
@@ -197,8 +197,8 @@ AI-assisted product description generation for sellers
 
 ### Mockups
 
-![Mockup1](./readmeImages/Mockup1)
-![Mockup2](./readmeImages/Mockup2)
+![Mockup1](./readmeImages/Mockup1.png)
+![Mockup2](./readmeImages/Mockup2.png)
 
 ### Video Demonstration
 
