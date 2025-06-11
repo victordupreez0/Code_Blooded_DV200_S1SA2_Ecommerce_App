@@ -38,14 +38,22 @@ const ProductSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-
-    flagReason: {
-        type: String,
-        default: ''
+    flagReasons: {
+        type: [String],
+        default: []
     },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
+    },
+    approved: {
+        type: Boolean,
+        default: false
+    },
+    status: {
+        type: String,
+        enum: ['pending', 'approved', 'denied'],
+        default: 'pending'
     }
 });
 
