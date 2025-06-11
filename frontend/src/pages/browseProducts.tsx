@@ -76,6 +76,14 @@ const BrowseProducts: React.FC = () => {
             <div>
               <h3 className="font-semibold mb-2 text-luxury-white tracking-wide uppercase text-l">Category</h3>
               <ul className="space-y-1">
+                <li>
+                  <button
+                    className={`w-full text-left px-2 py-1 transition font-semibold tracking-wide text-md border-transparent ${selectedCategory === 'All' ? 'text-luxury-black bg-luxury-primaryGold' : 'text-luxury-primaryGold hover:bg-luxury-gold-medium hover:text-black'}`}
+                    onClick={() => setSelectedCategory('All')}
+                  >
+                    All Products
+                  </button>
+                </li>
                 {categories.map((cat) => (
                   <li key={cat}>
                     <button
