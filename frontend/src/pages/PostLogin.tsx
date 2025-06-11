@@ -5,7 +5,7 @@ import AddProduct from '../components/addProduct';
 
 const PostLogin: React.FC = () => {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-luxury-brown-light/50 to-luxury-primaryGold">
       <Navbar />
       <main className="flex-grow">
       <AddProduct />

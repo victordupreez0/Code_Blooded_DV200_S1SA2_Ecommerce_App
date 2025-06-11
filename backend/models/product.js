@@ -28,7 +28,8 @@ const ProductSchema = new mongoose.Schema({
     comments: [CommentSchema],
     
     category: {
-        type: String,
+        type: String, 
+        enum: ['Vehicle', 'Property', 'Miscellaneous'],
         required: true
     },
 
