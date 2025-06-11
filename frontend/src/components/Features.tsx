@@ -53,7 +53,14 @@ useEffect(() => {
             <div
               key={product._id}
               className="product-card bg-luxury-black rounded-3xl shadow-md p-4 flex flex-col cursor-pointer group"
-              onClick={() => navigate(`/product/${product._id}`)}
+              onClick={() => {
+                const token = localStorage.getItem('token');
+                if (token) {
+                  navigate(`/product/${product._id}`);
+                } else {
+                  navigate('/login');
+                }
+              }}
             >
               <div className="relative group w-full">
                 {product.imageUrl && (

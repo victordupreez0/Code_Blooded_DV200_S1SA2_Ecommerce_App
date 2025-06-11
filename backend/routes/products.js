@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const Product = require('../models/product.js');
 const multer = require('multer');
 const path = require('path');
-const auth = require('../middleware/auth'); // <-- Add this line
+const auth = require('../middleware/auth');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -215,6 +215,25 @@ router.post('/flagged',async (req, res) => {
         res.status(400).json({ error : 'failed to fetch'});
     }
     
+});
+
+// Get all unapproved products (admin only)
+router.get('/pending', auth, async (req, res) => {
+    if (req.user.role !== 'admin') return res.status(403).json({ message: 'Forbidden' });
+    const products = await Product.find({ approved: false });
+    res.json(products);
+});
+
+// Approve a product (admin only)
+router.patch('/:id/approve', auth, async (req, res) => {
+    if (req.user.role !== 'admin') return res.status(403).json({ message: 'Forbidden' });
+    const product = await Product.findByIdAndUpdate(
+        req.params.id,
+        { approved: true, approvedBy: req.user.userId },
+        { new: true }
+    );
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+    res.json(product);
 });
 
 // Middelware
