@@ -4,6 +4,7 @@
 
 import React, { useEffect, useState } from "react";
 import { FiChevronDown, FiHeart, FiTrash2 } from "react-icons/fi";
+import { FaHeart } from "react-icons/fa"; // Add this import
 import axios from "axios";
 
 // Props for the comment section
@@ -290,7 +291,12 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
                     title="React"
                     onClick={() => handleReact(idx)}
                   >
-                    <FiHeart className="mr-1" /> {c.hearts}
+                    {c.likedBy && c.likedBy.includes(userId) ? (
+                      <FaHeart className="mr-1" />
+                    ) : (
+                      <FiHeart className="mr-1" />
+                    )} 
+                    {c.hearts}
                   </button>
                 </div>
               </li>

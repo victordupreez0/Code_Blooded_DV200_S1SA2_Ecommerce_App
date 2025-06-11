@@ -80,7 +80,7 @@ const ViewProduct = () => {
       {/* Flag Reason Modal - appears when user wants to flag a product */}
       {showFlagModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-[#fe7b00] rounded-2xl shadow-lg p-6 w-full max-w-md relative text-white">
+          <div className="bg-luxury-primaryBG rounded-2xl shadow-lg p-6 w-full max-w-md relative text-white">
             <button
               className="absolute top-2 right-2 text-white hover:text-gray-200 text-2xl font-bold"
               onClick={() => setShowFlagModal(false)}
@@ -91,7 +91,7 @@ const ViewProduct = () => {
             <h2 className="text-xl font-bold mb-4">Flag Product</h2>
             <label className="block mb-2 font-medium">Reason for flagging:</label>
             <textarea
-              className="w-full border border-gray-300 rounded px-3 py-2 mb-4 bg-[#fe7b00] text-white placeholder:text-white/70"
+              className="w-full border border-luxury-primaryGold rounded px-3 py-2 mb-4 bg-luxury-black/40 text-white focus:outline-none focus:ring-0 placeholder:text-white/70"
               value={flagReason} // Controlled input for flag reason
               onChange={e => setFlagReason(e.target.value)} // Update flag reason state
               placeholder="Enter reason..."

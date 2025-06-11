@@ -130,11 +130,11 @@ const Navbar: React.FC = () => {
             Products
           </Link>
           <Link
-            to="/link-2"
+            to="/Dashboard"
             onClick={() => setMobileMenuOpen(false)}
             className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-luxury-primaryGold  hover:bg-luxury-brown-light hover:border-luxury-gold-dark"
           >
-            FAQ
+            Dashboard
           </Link>
           {userRole === 'admin' && (
             <Link
