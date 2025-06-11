@@ -31,7 +31,7 @@ const Hero: React.FC = () => {
                       navigate('/login');
                     }
                   }}
-                  className="bg-black text-luxury-primaryGold border border-luxury-brown-light hover:bg-luxury-brown-light px-6 py-3 rounded-md text-base font-medium transition-colors"
+                  className="bg-black text-luxury-primaryGold border border-luxury-brown-light hover:bg-luxury-brown-light hover:text-luxury-black px-6 py-3 rounded-md text-base font-medium transition-colors"
                 >
                   Start Shopping
                 </button>
