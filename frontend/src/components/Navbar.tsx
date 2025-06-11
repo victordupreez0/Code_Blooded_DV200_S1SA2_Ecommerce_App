@@ -68,7 +68,10 @@ const Navbar: React.FC = () => {
             >
               Products
             </Link>
-            <Link to="/Dashboard" className="border-transparent text-luxury-brown-dark hover:text-luxury-brown-dark px-1 pt-1 font-medium">
+            <Link
+              to={isAuthenticated ? "/Dashboard" : "/login"}
+              className="border-transparent text-luxury-brown-dark hover:text-luxury-brown-dark px-1 pt-1 font-medium"
+            >
               Dashboard
             </Link>
             {/* Show Admin link only for admin users */}
@@ -130,7 +133,7 @@ const Navbar: React.FC = () => {
             Products
           </Link>
           <Link
-            to="/Dashboard"
+            to={isAuthenticated ? "/Dashboard" : "/login"}
             onClick={() => setMobileMenuOpen(false)}
             className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-luxury-primaryGold  hover:bg-luxury-brown-light hover:border-luxury-gold-dark"
           >

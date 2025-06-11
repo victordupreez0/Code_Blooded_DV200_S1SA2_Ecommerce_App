@@ -3,21 +3,15 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useToast } from '../hooks/use-toast';
 
 const Logout: React.FC = () => {
   const navigate = useNavigate(); // React Router navigation hook
-  const { toast } = useToast(); // Custom toast notification hook
 
   // Clears localStorage and redirects to login after showing a toast
   const handleLogout = () => {
     console.log('Logging out, clearing localStorage'); // Debug log
     localStorage.removeItem('token'); // Remove JWT token
     localStorage.removeItem('user'); // Remove user info
-    toast({
-      title: "Success",
-      description: "Logged out successfully. Redirecting to login...",
-    });
     setTimeout(() => {
       navigate('/login'); // Redirect to login page after 1 second
     }, 1000);
