@@ -23,7 +23,7 @@ https://github.com/victordupreez0/Code_Blooded_DV200_S1SA2_Ecommerce_App
 * [Development Process](#development-process)
    * [Implementation Process](#implementation-process)
         * [Highlights](#highlights)
-   * [Reviews and Testing](#peer-reviews)
+   * [Reviews and Testing](#reviews-and-testing)
         * [Peer Testing](#peer-testing)
    * [Future Implementation](#future-implementation)
 * [Final Outcome](#final-outcome)
