@@ -32,6 +32,7 @@ const BrowseProducts: React.FC = () => {
 
   const filteredProducts = products.filter((product) => {
     let pass = true;
+    if (product.status !== 'approved') pass = false;
     if (selectedCategory !== 'All' && product.category !== selectedCategory) pass = false;
     if (minPrice && Number(product.price) < Number(minPrice)) pass = false;
     if (maxPrice && Number(product.price) > Number(maxPrice)) pass = false;

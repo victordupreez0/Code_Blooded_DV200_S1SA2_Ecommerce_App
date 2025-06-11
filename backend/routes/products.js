@@ -20,7 +20,26 @@ const upload = multer({ storage: storage });
 // Getting All Products
 router.get ('/', async (req, res) => {
    try{
-        const products = await Product.find()
+        let products;
+        // If admin, return all products, else only approved
+        if (req.headers && req.headers.authorization) {
+            // Try to decode token to check admin (reuse auth middleware logic if possible)
+            const token = req.headers.authorization.split(' ')[1];
+            const jwt = require('jsonwebtoken');
+            let decoded;
+            try {
+                decoded = jwt.verify(token, process.env.JWT_SECRET);
+            } catch {
+                decoded = null;
+            }
+            if (decoded && decoded.role === 'admin') {
+                products = await Product.find();
+            } else {
+                products = await Product.find({ approved: true });
+            }
+        } else {
+            products = await Product.find({ approved: true });
+        }
         res.json(products);
    } catch (err) {
     res.status(500).json({ message: err.message });
@@ -48,14 +67,15 @@ router.post ('/', upload.single('image'), async (req, res) => {
    }
    // The userId field below links the product to the user who uploaded it.
    // This allows us to later filter products by user, so each user only sees/manages their own products in the dashboard.
-   // The userId is sent from the frontend and should match the _id of the logged-in user.
    const product = new Product ({
     name: req.body.name,
     price: req.body.price,
     description: req.body.description,
     imageUrl: imageUrl, // Always save the imageUrl to the database
     category: req.body.category,
-    userId: req.body.userId // <-- Link product to user who uploaded it
+    userId: req.body.userId, // <-- Link product to user who uploaded it
+    approved: false,
+    status: 'pending'
    })
 
    try{
@@ -83,6 +103,18 @@ router.patch('/:id', getProduct, upload.single('image'), async (req, res) => {
     }
     if (req.file) {
         res.product.imageUrl = `/uploads/${req.file.filename}`;
+    }
+    // Allow admin to set approval status and status field
+    if (req.body.status) {
+        res.product.status = req.body.status;
+        if (req.body.status === 'approved') {
+            res.product.approved = true;
+        } else if (req.body.status === 'denied') {
+            res.product.approved = false;
+        }
+    }
+    if (typeof req.body.approved !== 'undefined') {
+        res.product.approved = req.body.approved;
     }
     try {
         const updatedProduct = await res.product.save();
@@ -188,24 +220,23 @@ router.post('/:id/comments/:commentId/react', auth, async (req, res) => {
     }
 });
 
-
+// Flag a product (add a flag reason)
 router.post('/:id/flag', async (req, res) => {
-    try{
-        const {reason} = req.body;
-        const product = await Product.findByIdAndUpdate(
-            req.params.id,
-            {flagged: true, flagReason: reason || ''},
-            {new: true}
-
-        );
+    try {
+        const { reason } = req.body;
+        const product = await Product.findById(req.params.id);
+        if (!product) return res.status(404).json({ message: 'Product not found' });
+        if (reason) {
+            product.flagReasons = product.flagReasons || [];
+            product.flagReasons.push(reason);
+            product.flagged = true;
+        }
+        await product.save();
         res.json(product);
-    } catch(err) {
-        res.status(400).json({ error : 'failed to flag'});
-
-    
+    } catch (err) {
+        res.status(400).json({ error: 'failed to flag' });
     }
 });
-
 
 router.post('/flagged',async (req, res) => {
     try{
@@ -229,11 +260,40 @@ router.patch('/:id/approve', auth, async (req, res) => {
     if (req.user.role !== 'admin') return res.status(403).json({ message: 'Forbidden' });
     const product = await Product.findByIdAndUpdate(
         req.params.id,
-        { approved: true, approvedBy: req.user.userId },
+        { approved: true, status: 'approved', approvedBy: req.user.userId },
         { new: true }
     );
     if (!product) return res.status(404).json({ message: 'Product not found' });
     res.json(product);
+});
+
+// Get all products for a specific user (regardless of approval)
+router.get('/user/:userId', async (req, res) => {
+    try {
+        const products = await Product.find({ userId: req.params.userId });
+        res.json(products);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+// Remove a specific flag reason from a product (admin only)
+router.delete('/:id/flag/:flagIdx', auth, async (req, res) => {
+    if (req.user.role !== 'admin') return res.status(403).json({ message: 'Forbidden' });
+    try {
+        const product = await Product.findById(req.params.id);
+        if (!product) return res.status(404).json({ message: 'Product not found' });
+        const idx = parseInt(req.params.flagIdx, 10);
+        if (isNaN(idx) || idx < 0 || idx >= (product.flagReasons?.length || 0)) {
+            return res.status(400).json({ message: 'Invalid flag index' });
+        }
+        product.flagReasons.splice(idx, 1);
+        if (product.flagReasons.length === 0) product.flagged = false;
+        await product.save();
+        res.json(product);
+    } catch (err) {
+        res.status(400).json({ error: 'failed to resolve flag' });
+    }
 });
 
 // Middelware

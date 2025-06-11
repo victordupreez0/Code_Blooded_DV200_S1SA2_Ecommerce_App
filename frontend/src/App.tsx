@@ -6,7 +6,7 @@ import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
-import PostLogin from "./pages/PostLogin";
+import PostLogin from "./pages/adminDashboard";
 import ViewProduct from "./components/viewProduct";
 import BrowseProducts from "./pages/browseProducts";
 import Cart from "./pages/Cart";

@@ -40,7 +40,7 @@ function AddProduct() {
           'Content-Type': 'multipart/form-data'
         }
       });
-      setMessage('Product created!');
+      setMessage('Product under review!');
       setForm({ name: '', price: '', description: '', image: null, category: '' });
     } catch (err) {
       setMessage('Error creating product');
@@ -51,7 +51,17 @@ function AddProduct() {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:3000/products');
+      const token = localStorage.getItem('token');
+      let res;
+      if (token) {
+        // For admin, fetch all products
+        res = await axios.get('http://localhost:3000/products', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      } else {
+        // fallback: show nothing
+        res = { data: [] };
+      }
       setProducts(res.data);
     } catch (err) {
       setMessage('Error fetching products');
@@ -62,6 +72,21 @@ function AddProduct() {
   useEffect(() => {
     if (view === 'view') fetchProducts();
   }, [view]);
+
+  // Get user role from localStorage
+  const [userRole, setUserRole] = useState<string | null>(null);
+  useEffect(() => {
+    const user = localStorage.getItem('user');
+    if (user) {
+      try {
+        setUserRole(JSON.parse(user).role || null);
+      } catch {
+        setUserRole(null);
+      }
+    } else {
+      setUserRole(null);
+    }
+  }, []);
 
   // Delete product
   const handleDelete = async (id) => {
@@ -218,10 +243,47 @@ function AddProduct() {
                     onClick={() => window.location.href = `/product/${product._id}`}
                   >
                     {/* Flagged reason in top right */}
-                    {product.flagged && product.flagReason && (
+                    {product.flagged && product.flagReasons && product.flagReasons.length > 0 && (
                       <div className="absolute top-4 right-4 flex flex-col items-end z-10">
                         <span className="bg-red-500 text-white px-2 py-1 rounded text-xs font-bold">Flagged</span>
-                        <span className="text-xs text-white mt-1 text-right max-w-[150px] break-words">Reason: {product.flagReason}</span>
+                        <details className="mt-1">
+                          <summary
+                            className="text-xs bg-white text-black rounded p-1 max-w-[150px] cursor-pointer select-none"
+                            onClick={e => e.stopPropagation()}
+                          >
+                            View Flags
+                          </summary>
+                          <ul className="bg-white text-black rounded shadow p-2 mt-1 max-w-[180px] text-xs">
+                            {product.flagReasons.map((reason: string, idx: number) => (
+                              <li key={idx} className="mb-1 last:mb-0 flex items-center justify-between gap-2">
+                                <span>{reason}</span>
+                                {userRole === 'admin' && (
+                                  <button
+                                    className="ml-2 px-2 py-0.5 bg-green-600 text-white rounded text-xs hover:bg-green-800 transition"
+                                    title="Resolve flag"
+                                    onClick={async (e) => {
+                                      e.stopPropagation();
+                                      try {
+                                        await axios.delete(`http://localhost:3000/products/${product._id}/flag/${idx}`, {
+                                          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+                                        });
+                                        setProducts(products => products.map(p =>
+                                          p._id === product._id
+                                            ? { ...p, flagReasons: p.flagReasons.filter((_, i) => i !== idx), flagged: p.flagReasons.length - 1 > 0 }
+                                            : p
+                                        ));
+                                      } catch (err) {
+                                        alert('Failed to resolve flag');
+                                      }
+                                    }}
+                                  >
+                                    Resolve
+                                  </button>
+                                )}
+                              </li>
+                            ))}
+                          </ul>
+                        </details>
                       </div>
                     )}
                     <div className="flex items-center gap-4">
@@ -236,8 +298,46 @@ function AddProduct() {
                         <span className="font-semibold text-white">{product.name}</span>
                         <span className="ml-2 text-luxury-primaryGold">${product.price}</span>
                         <div className="text-sm text-white/80 max-w-[80%] break-words">{product.description}</div>
+                        {product.status === 'pending' && (
+                          <span className="ml-2 text-yellow-500 font-bold">Pending Review</span>
+                        )}
+                        {product.status === 'denied' && (
+                          <span className="ml-2 text-red-500 font-bold">Denied</span>
+                        )}
+                        {product.status === 'approved' && (
+                          <span className="ml-2 text-green-500 font-bold">Approved</span>
+                        )}
                       </div>
                     </div>
+                    {/* Admin controls for pending, denied, and approved products */}
+                    {(product.status === 'pending' || product.status === 'denied' || product.status === 'approved') && (
+                      <div className="flex gap-2 justify-end mt-2" onClick={e => e.stopPropagation()}>
+                        {(product.status === 'pending' || product.status === 'denied') && (
+                          <button
+                            className="px-3 py-1 bg-green-600 text-white rounded-xl hover:bg-green-800 transition"
+                            onClick={async (e) => {
+                              e.preventDefault();
+                              await axios.patch(`http://localhost:3000/products/${product._id}/approve`, {}, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
+                              setProducts(products => products.map(p => p._id === product._id ? { ...p, status: 'approved', approved: true } : p));
+                            }}
+                          >
+                            Accept
+                          </button>
+                        )}
+                        {(product.status === 'pending' || product.status === 'approved') && (
+                          <button
+                            className="px-3 py-1 bg-red-600 text-white rounded-xl hover:bg-red-800 transition"
+                            onClick={async (e) => {
+                              e.preventDefault();
+                              await axios.patch(`http://localhost:3000/products/${product._id}`, { status: 'denied' }, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
+                              setProducts(products => products.map(p => p._id === product._id ? { ...p, status: 'denied', approved: false } : p));
+                            }}
+                          >
+                            Deny
+                          </button>
+                        )}
+                      </div>
+                    )}
                     {/* Delete button to the right */}
                     <div className="flex gap-2 justify-end mt-2" onClick={e => e.stopPropagation()}>
                       <button
