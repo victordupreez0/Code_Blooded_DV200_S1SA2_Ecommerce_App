@@ -93,22 +93,23 @@ const BrowseProducts: React.FC = () => {
             </div>
             <div>
               <h3 className="font-semibold mb-2 text-luxury-white tracking-wide uppercase text-l">Price</h3>
-              <div className="flex gap-2 items-center">
+              <div className="flex flex-col gap-2 items-center">
                 <input
-                  type="number"
-                  placeholder="Min"
-                  className="w-20 px-2 py-1 rounded border border-luxury-primaryGold bg-white text-black"
-                  value={minPrice}
+                  type="range"
+                  min={1000000}
+                  max={5000000000}
+                  step={1000000}
+                  value={minPrice ? minPrice : 1000000}
                   onChange={e => setMinPrice(e.target.value)}
+                  className="w-full accent-luxury-primaryGold"
                 />
-                <span className="text-luxury-white">-</span>
-                <input
-                  type="number"
-                  placeholder="Max"
-                  className="w-20 px-2 py-1 rounded border border-luxury-primaryGold bg-white text-black"
-                  value={maxPrice}
-                  onChange={e => setMaxPrice(e.target.value)}
-                />
+                <div className="flex justify-between w-full text-xs text-luxury-white">
+                  <span>1M</span>
+                  <span>5B</span>
+                </div>
+                <div className="text-luxury-primaryGold font-semibold mt-1">
+                  Min Price: ${Number(minPrice || 1000000).toLocaleString()}
+                </div>
               </div>
             </div>
             {/* <div>
