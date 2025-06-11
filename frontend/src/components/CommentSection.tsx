@@ -1,12 +1,18 @@
+// Displays and manages comments for a product. Handles CRUD operations, likes, and user roles.
+// Props: productId (string) - the ID of the product to show comments for.
+// Shows comment list, add/edit/delete functionality, and like (heart) feature.
+
 import React, { useEffect, useState } from "react";
 import { FiChevronDown, FiHeart, FiTrash2 } from "react-icons/fi";
 import { FaHeart } from "react-icons/fa"; // Add this import
 import axios from "axios";
 
+// Props for the comment section
 interface CommentSectionProps {
   productId: string;
 }
 
+// Comment object structure
 interface Comment {
   _id: string;
   userId: string;
@@ -17,6 +23,7 @@ interface Comment {
 }
 
 const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
+  // Get username, userId, and userRole from localStorage
   const [username] = useState(() => {
     try {
       const user = localStorage.getItem("user");
@@ -44,6 +51,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
     } catch {}
     return "user";
   });
+  // State for comment input, comments list, loading, editing, and errors
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState<Comment[]>([]);
   const [loadingComments, setLoadingComments] = useState(false);
@@ -51,24 +59,27 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
   const [editComment, setEditComment] = useState("");
   const [error, setError] = useState<string | null>(null);
 
+  // Fetch comments for the product on mount or when productId changes
   useEffect(() => {
     const fetchComments = async () => {
-      setLoadingComments(true);
+      setLoadingComments(true); // Set loading state while fetching
       try {
+        // Fetch product details (including comments) from backend
         const res = await axios.get(
           `http://localhost:3000/products/${productId}`
         );
-        setComments(res.data.comments || []);
+        setComments(res.data.comments || []); // Set comments state
       } catch (err) {
-        // handle error
+        // handle error (could set error state here)
       }
-      setLoadingComments(false);
+      setLoadingComments(false); // Done loading
     };
-    if (productId) fetchComments();
+    if (productId) fetchComments(); // Only fetch if productId is provided
   }, [productId]);
 
+  // Handle new comment submission
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submit
     if (comment.trim() === "") return; // Prevent empty comments
     try {
       const token = localStorage.getItem("token");
@@ -82,9 +93,9 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
         { comment },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setComments([res.data, ...comments]);
-      setComment("");
-      setError(null);
+      setComments([res.data, ...comments]); // Add new comment to top of list
+      setComment(""); // Reset input
+      setError(null); // Clear error
     } catch (err: any) {
       setError(
         err?.response?.data?.message || "Failed to post comment. Please try again."

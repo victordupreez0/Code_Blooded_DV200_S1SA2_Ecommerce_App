@@ -1,3 +1,6 @@
+// Express router for handling product-related operations in the e-commerce application
+// Provides endpoints for CRUD operations, image uploads, comments, reactions, flagging, and admin moderation on products
+
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
@@ -270,6 +273,7 @@ router.patch('/:id/approve', auth, async (req, res) => {
 // Get all products for a specific user (regardless of approval)
 router.get('/user/:userId', async (req, res) => {
     try {
+        // Find all products created by the specified user
         const products = await Product.find({ userId: req.params.userId });
         res.json(products);
     } catch (err) {
@@ -279,15 +283,21 @@ router.get('/user/:userId', async (req, res) => {
 
 // Remove a specific flag reason from a product (admin only)
 router.delete('/:id/flag/:flagIdx', auth, async (req, res) => {
+    // Only allow admins to remove flag reasons
     if (req.user.role !== 'admin') return res.status(403).json({ message: 'Forbidden' });
     try {
+        // Find the product by ID
         const product = await Product.findById(req.params.id);
         if (!product) return res.status(404).json({ message: 'Product not found' });
+        // Parse the flag index from the URL parameter
         const idx = parseInt(req.params.flagIdx, 10);
+        // Validate the flag index
         if (isNaN(idx) || idx < 0 || idx >= (product.flagReasons?.length || 0)) {
             return res.status(400).json({ message: 'Invalid flag index' });
         }
+        // Remove the flag reason at the specified index
         product.flagReasons.splice(idx, 1);
+        // If no flag reasons remain, set flagged to false
         if (product.flagReasons.length === 0) product.flagged = false;
         await product.save();
         res.json(product);
@@ -296,20 +306,24 @@ router.delete('/:id/flag/:flagIdx', auth, async (req, res) => {
     }
 });
 
-// Middelware
+// Middleware to fetch a product by ID and attach it to the response object
 async function getProduct(req, res, next) {
     let product
     try {
+        // Attempt to find the product by ID
         product = await Product.findById(req.params.id)
         if (product == null) {
+            // If not found, return 404
             return res.status(404).json({ message: 'Cannot find product' });
         }
     } catch (err) {
+        // Handle errors during product lookup
         return res.status(500).json({ message: err.message });
     }
 
-    res.product = product
-    next()
+    res.product = product // Attach the found product to the response object
+    next() // Proceed to the next middleware or route handler
 }
 
+// Export the router for use in the main server
 module.exports = router;

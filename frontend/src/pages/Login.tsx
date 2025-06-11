@@ -1,57 +1,50 @@
+// User login page for the e-commerce application.
+// Handles login form state, authentication, error handling, and redirects on successful login.
+// Stores JWT token and user info in localStorage for session management.
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Eye, EyeOff } from 'lucide-react';
-import { useToast } from '../hooks/use-toast.ts';
 import axios from 'axios';
 import Navbar from '../components/Navbar.tsx';
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const { toast } = useToast();
-  const navigate = useNavigate();
+  const [email, setEmail] = useState(''); // State for email input
+  const [password, setPassword] = useState(''); // State for password input
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+  const navigate = useNavigate(); // React Router navigation hook
 
+  // Handle form submission for login
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission
     if (!email || !password) {
-      toast({
-        title: "Error",
-        description: "Please fill in all fields",
-        variant: "destructive",
-      });
-      return;
+      return; // Do not submit if fields are empty
     }
 
     try {
+      // Send login request to backend
       const res = await axios.post('http://localhost:3000/auth/login', { email, password });
       const { token, user } = res.data;
-      console.log('Login successful, storing token:', token, 'User:', user);
+      console.log('Login successful, storing token:', token, 'User:', user); // Debug log
+      // Store JWT token and user info in localStorage
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify({
         _id: user._id,
         fullName: user.fullName,
         role: user.role
       }));
-      toast({
-        title: "Success",
-        description: "Login successful. Redirecting...",
-      });
+      // Redirect to products page after a short delay
       setTimeout(() => {
         navigate('/browseProducts');
       }, 1000);
     } catch (err: any) {
+      // Handle login errors
       console.error('Login failed:', err.response?.data || err.message);
       if (err.response?.status === 401) {
         console.log('Unauthorized, clearing localStorage');
         localStorage.removeItem('token');
         localStorage.removeItem('user');
       }
-      toast({
-        title: "Login Failed",
-        description: err.response?.data?.message || "An error occurred",
-        variant: "destructive",
-      });
     }
   };
 
@@ -107,7 +100,6 @@ const Login: React.FC = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="luxury-input w-full bg-luxury-black text-white placeholder:text-luxury-white focus:border-luxury-primaryGold"
-// ...other props
                 />
                 <button
                   type="button"
