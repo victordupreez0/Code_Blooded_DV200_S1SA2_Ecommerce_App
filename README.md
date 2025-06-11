@@ -42,7 +42,7 @@ https://github.com/victordupreez0/Code_Blooded_DV200_S1SA2_Ecommerce_App
 
 ## About the Project
 
-![HomePage](./readmeImages/HomePage)
+![HomePage](./readmeImages/HomePage.png)
 
 ### Project Description
 
