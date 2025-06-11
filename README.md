@@ -19,25 +19,16 @@ https://github.com/victordupreez0/Code_Blooded_DV200_S1SA2_Ecommerce_App
   * [How to install](#how-to-install)
 * [Features and Functionality](#features-and-functionality)
 * [Concept Process](#concept-process)
-   * [Ideation](#ideation)
    * [Wireframes](#wireframes)
-   * [User-flow](#user-flow)
 * [Development Process](#development-process)
    * [Implementation Process](#implementation-process)
         * [Highlights](#highlights)
-        * [Challenges](#challenges)
    * [Reviews and Testing](#peer-reviews)
-        * [Feedback from Reviews](#feedback-from-reviews)
-        * [Unit Tests](#unit-tests)
-   * [Future Implementation](#peer-reviews)
+        * [Peer Testing](#peer-testing)
+   * [Future Implementation](#future-implementation)
 * [Final Outcome](#final-outcome)
     * [Mockups](#mockups)
     * [Video Demonstration](#video-demonstration)
-* [Conclusion](#conclusion)
-* [Roadmap](#roadmap)
-* [Contributing](#contributing)
-* [License](#license)
-* [Contact](#contact)
 * [Acknowledgements](#acknowledgements)
 
 ## About the Project
@@ -158,7 +149,7 @@ Session management ensures secure user access to dashboards and marketplace feat
 - Filtering system allows sorting by price range and product category
 
 
-### Reviews & Testing
+### Reviews and Testing
 
 Throughout development, our team followed a collaborative testing approach to ensure a smooth and reliable experience for users.
 
