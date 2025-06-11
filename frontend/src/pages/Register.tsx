@@ -1,22 +1,27 @@
+// User registration page for the e-commerce application.
+// Handles registration form state, password validation, and user creation via backend API.
+// On success, stores token/user in localStorage and redirects to products.
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Eye, EyeOff } from 'lucide-react';
-import { useToast } from '../hooks/use-toast.ts';
 import axios from 'axios';
 import Navbar from '../components/Navbar.tsx';
 
 const Register: React.FC = () => {
+  // Form data state: fullName, email, password, confirmPassword
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
     password: '',
     confirmPassword: '',
   });
+  // Password visibility states
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { toast } = useToast();
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // React Router navigation hook
 
+  // Handle input changes for all form fields
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -25,71 +30,56 @@ const Register: React.FC = () => {
     }));
   };
 
+  // Validate password strength (min 8 chars, uppercase, lowercase, number)
   const validatePassword = (password: string): boolean => {
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
     return regex.test(password);
   };
 
+  // Handle form submission for registration
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission
 
     const { fullName, email, password, confirmPassword } = formData;
 
+    // Check for empty fields
     if (!fullName || !email || !password || !confirmPassword) {
-      toast({
-        title: "Error",
-        description: "Please fill in all fields",
-        variant: "destructive",
-      });
       return;
     }
 
+    // Validate password strength
     if (!validatePassword(password)) {
-      toast({
-        title: "Password Error",
-        description: "Password must be at least 8 characters, and include uppercase, lowercase, and numbers",
-        variant: "destructive",
-      });
       return;
     }
 
+    // Ensure passwords match
     if (password !== confirmPassword) {
-      toast({
-        title: "Password Error",
-        description: "Passwords do not match",
-        variant: "destructive",
-      });
       return;
     }
 
     try {
+      // Send registration request to backend
       const response = await axios.post('http://localhost:3000/auth/register', {
         fullName,
         email,
         password
       });
       const { token, user } = response.data;
-      console.log('Register successful, storing token:', token, 'User:', user);
+      console.log('Register successful, storing token:', token, 'User:', user); // Debug log
+      // Store JWT token and user info in localStorage
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify({
         _id: user._id,
         fullName: user.fullName,
         role: user.role
       }));
-      toast({
-        title: "Success",
-        description: "Account created successfully. Redirecting to products...",
-      });
+      // Redirect to products page after a short delay
       setTimeout(() => {
         navigate('/browseProducts');
       }, 1200);
     } catch (err: any) {
+      // Handle registration errors
       console.error('Registration failed:', err.response?.data || err.message);
-      toast({
-        title: "Registration Failed",
-        description: err.response?.data?.message || "An error occurred",
-        variant: "destructive",
-      });
     }
   };
 

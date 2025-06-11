@@ -1,26 +1,38 @@
+// browseProducts.tsx
+// Product browsing page for the e-commerce application.
+// Displays all approved products with filtering (category, price, rating) and add-to-cart functionality.
+// Integrates with backend API for product data and cart operations, and provides a responsive UI.
+
 import React, { useState } from 'react';
-import Navbar from '../components/Navbar';
-import Hero from '../components/Features';
-import Footer from '../components/Footer';
-import { useProducts } from '../hooks/useProducts';
-import { Product } from '../types/product';
-import "../components/styling/main.css";
-import axios from 'axios';
-import { FaFlag } from 'react-icons/fa';
+import Navbar from '../components/Navbar'; // Top navigation bar
+import Hero from '../components/Features'; // (Optional) Hero/feature section
+import Footer from '../components/Footer'; // Bottom footer
+import { useProducts } from '../hooks/useProducts'; // Custom hook to fetch products
+import { Product } from '../types/product'; // Product type definition
+import "../components/styling/main.css"; // Main CSS for styling
+import axios from 'axios'; // For HTTP requests (add to cart)
+import { FaFlag } from 'react-icons/fa'; // Flag icon (not used in this excerpt)
 
 const BrowseProducts: React.FC = () => {
+  // Fetch products and loading/error state from custom hook
   const { products, loading, error } = useProducts();
+  // State for selected category filter
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  // State for minimum price filter
   const [minPrice, setMinPrice] = useState('');
+  // State for maximum price filter
   const [maxPrice, setMaxPrice] = useState('');
+  // State for minimum rating filter
   const [minRating, setMinRating] = useState('');
 
+  // Helper to extract unique categories from products
   const getUniqueCategories = (products: Product[]) => {
     const cat = new Set<string>();
     products.forEach(p => p.category && cat.add(p.category));
     return Array.from(cat);
   };
 
+  // Reset all filters to default values
   const resetFilters = () => {
     setSelectedCategory('All');
     setMinPrice('');
@@ -28,22 +40,26 @@ const BrowseProducts: React.FC = () => {
     setMinRating('');
   };
 
+  // Get all unique categories for filter sidebar
   const categories = getUniqueCategories(products);
 
+  // Filter products based on selected filters and approval status
   const filteredProducts = products.filter((product) => {
     let pass = true;
-    if (product.status !== 'approved') pass = false;
-    if (selectedCategory !== 'All' && product.category !== selectedCategory) pass = false;
-    if (minPrice && Number(product.price) < Number(minPrice)) pass = false;
-    if (maxPrice && Number(product.price) > Number(maxPrice)) pass = false;
-    if (minRating && (!product.rating || product.rating < Number(minRating))) pass = false;
+    if (product.status !== 'approved') pass = false; // Only show approved products
+    if (selectedCategory !== 'All' && product.category !== selectedCategory) pass = false; // Category filter
+    if (minPrice && Number(product.price) < Number(minPrice)) pass = false; // Min price filter
+    if (maxPrice && Number(product.price) > Number(maxPrice)) pass = false; // Max price filter
+    if (minRating && (!product.rating || product.rating < Number(minRating))) pass = false; // Min rating filter
     return pass;
   });
 
+  // Add a product to the cart (requires authentication)
   const handleAddToCart = async (productId: string, quantity = 1) => {
     console.log('Adding productId:', productId, 'Token present:', !!localStorage.getItem('token'));
     const token = localStorage.getItem('token');
     if (!token) {
+      // If not logged in, redirect to login and clear local storage
       console.log('No token found, redirecting to login');
       window.location.href = '/login';
       localStorage.removeItem('token');
@@ -51,18 +67,22 @@ const BrowseProducts: React.FC = () => {
       return;
     }
     try {
+      // Send POST request to backend to add product to cart
       const res = await axios.post('http://localhost:3000/api/cart/add', { productId, quantity }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       console.log('Add to cart response:', res.data);
     } catch (error: any) {
+      // Handle errors, especially authentication errors
       console.error('Add to cart failed:', error.response?.data || error.message);
       if (error.response?.status === 401) {
+        // If unauthorized, clear token and redirect
         console.log('Unauthorized, clearing token and redirecting to login');
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         window.location.href = '/login';
       } else {
+        // Log other error details
         console.error('Add to cart error details:', error.response?.data);
       }
     }
@@ -121,21 +141,6 @@ const BrowseProducts: React.FC = () => {
                 </div>
               </div>
             </div>
-            {/* <div>
-              <h3 className="font-semibold mb-2 text-luxury-white tracking-wide uppercase text-l">Min Rating</h3>
-              <select
-                className="w-full px-2 py-1 rounded border border-luxury-primaryGold bg-white text-black"
-                value={minRating}
-                onChange={e => setMinRating(e.target.value)}
-              >
-                <option value="">Any</option>
-                <option value="1">1★</option>
-                <option value="2">2★</option>
-                <option value="3">3★</option>
-                <option value="4">4★</option>
-                <option value="5">5★</option>
-              </select>
-            </div> */}
             <button
               className="w-full mt-2 py-2 bg-luxury-brown-light text-black rounded font-semibold hover:bg-luxury-gold-medium transition"
               onClick={resetFilters}
@@ -176,15 +181,18 @@ const BrowseProducts: React.FC = () => {
                   </div>
                   <div className="flex items-center justify-between mt-5 gap-2">
                     <div className="flex items-center justify-between">
+                      {/* Display product price, formatted with commas */}
                       <span className="text-xl p-1 text-luxury-primaryGold font-bold text-green-700">${product.price.toLocaleString()}</span>
                     </div>
+                    {/* Add to Cart button triggers handleAddToCart with product ID and quantity 1 */}
                     <button
                       className="bg-luxury-gold-dark text-luxury-white rounded-3xl font-medium px-5 py-3 hover:bg-luxury-primaryGold hover:text-luxury-black transition"
                       onClick={e => {
-                        e.stopPropagation();
-                        handleAddToCart(product._id, 1);
+                        e.stopPropagation(); // Prevent parent click event (e.g., navigation)
+                        handleAddToCart(product._id, 1); // Add product to cart
                       }}
                     >
+                      {/* Cart icon SVG for visual indication */}
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
                         <circle cx="9" cy="21" r="1.5" />
                         <circle cx="19" cy="21" r="1.5" />

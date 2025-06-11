@@ -1,7 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+// This component provides a UI for admin users to add new products, view/search all products, approve/deny products, 
+// resolve flags, and delete products.
+// It manages form state, product list state, and interacts with the backend API for all product management operations.
+
+import React, { useState, useEffect } from 'react'; // Import React and hooks for state and lifecycle
+import axios from 'axios'; // Import axios for HTTP requests
 
 function AddProduct() {
+  // State for product form fields
   const [form, setForm] = useState({
     name: '',
     price: '',
@@ -9,12 +14,14 @@ function AddProduct() {
     image: null,
     category: ''
   });
-  const [message, setMessage] = useState('');
-  const [view, setView] = useState('add'); // 'add' or 'view'
-  const [products, setProducts] = useState([]);
-  const [search, setSearch] = useState('');
-  const [loading, setLoading] = useState(false);
+  // State for messages, view mode, product list, search, and loading
+  const [message, setMessage] = useState(''); // Message to display to the user (success/error)
+  const [view, setView] = useState('add'); // 'add' or 'view' mode
+  const [products, setProducts] = useState([]); // List of products for admin view
+  const [search, setSearch] = useState(''); // Search query for filtering products
+  const [loading, setLoading] = useState(false); // Loading state for product fetch
 
+  // Handle form field changes (including file input for image)
   const handleChange = (e) => {
     if (e.target.name === 'image') {
       setForm({ ...form, image: e.target.files[0] });
@@ -23,10 +30,12 @@ function AddProduct() {
     }
   };
 
+  // Handle form submission to add a new product
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission
     setMessage('');
     try {
+      // Prepare form data for multipart/form-data POST
       const formData = new FormData();
       formData.append('name', form.name);
       formData.append('price', form.price);
@@ -35,26 +44,27 @@ function AddProduct() {
       if (form.image) {
         formData.append('image', form.image);
       }
+      // Send POST request to backend to create product
       await axios.post('http://localhost:3000/products', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
-      setMessage('Product under review!');
-      setForm({ name: '', price: '', description: '', image: null, category: '' });
+      setMessage('Product under review!'); // Show success message
+      setForm({ name: '', price: '', description: '', image: null, category: '' }); // Reset form
     } catch (err) {
-      setMessage('Error creating product');
+      setMessage('Error creating product'); // Show error message
     }
   };
 
-  // Fetch products from backend
+  // Fetch products from backend (for admin view)
   const fetchProducts = async () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
       let res;
       if (token) {
-        // For admin, fetch all products
+        // For admin, fetch all products with authorization
         res = await axios.get('http://localhost:3000/products', {
           headers: { Authorization: `Bearer ${token}` }
         });
@@ -69,6 +79,7 @@ function AddProduct() {
     setLoading(false);
   };
 
+  // Fetch products when switching to 'view' mode
   useEffect(() => {
     if (view === 'view') fetchProducts();
   }, [view]);
@@ -88,7 +99,7 @@ function AddProduct() {
     }
   }, []);
 
-  // Delete product
+  // Delete product by ID
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:3000/products/${id}`);
@@ -98,7 +109,7 @@ function AddProduct() {
     }
   };
 
-  // Filtered products
+  // Filtered products based on search query (by name or description)
   const filteredProducts = products.filter(p =>
     p.name.toLowerCase().includes(search.toLowerCase()) ||
     p.description.toLowerCase().includes(search.toLowerCase())

@@ -1,21 +1,33 @@
+// User dashboard page for the e-commerce application.
+// Displays user info and products created by the user, and allows adding, editing, and deleting user's own products.
+// Handles product CRUD operations, form state, and modal UI for product management.
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 
 const Dashboard: React.FC = () => {
+  // State for the logged-in user's name
   const [username, setUsername] = useState('');
+  // State for the logged-in user's ID
   const [userId, setUserId] = useState('');
+  // State for the list of products created by the user
   const [products, setProducts] = useState([]);
+  // State for the product form (add/edit)
   const [form, setForm] = useState({ name: '', price: '', description: '', image: null, category: '' });
+  // State for displaying messages (success/error)
   const [message, setMessage] = useState('');
+  // State for loading indicator
   const [loading, setLoading] = useState(false);
+  // State for showing/hiding the add/edit product modal
   const [showModal, setShowModal] = useState(false);
+  // State for the product being edited (if any)
   const [editProduct, setEditProduct] = useState<any>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Get user from localStorage and display their name from the database object
+    // On mount, get user from localStorage and set username/userId
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       try {
@@ -38,6 +50,7 @@ const Dashboard: React.FC = () => {
   const fetchProducts = async () => {
     setLoading(true);
     try {
+      // Fetch products for the current user from backend
       const res = await axios.get(`http://localhost:3000/products/user/${userId}`);
       setProducts(res.data);
     } catch (err) {
@@ -47,9 +60,11 @@ const Dashboard: React.FC = () => {
   };
 
   useEffect(() => {
+    // Fetch products when userId is set
     if (userId) fetchProducts();
   }, [userId]);
 
+  // Handle changes in the add/edit product form fields
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     if (e.target.name === 'image' && e.target instanceof HTMLInputElement && e.target.files) {
       setForm({ ...form, image: e.target.files[0] });
@@ -58,6 +73,7 @@ const Dashboard: React.FC = () => {
     }
   };
 
+  // Handle form submission for adding a new product
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage('');
@@ -76,12 +92,13 @@ const Dashboard: React.FC = () => {
       });
       setMessage('Product under review!');
       setForm({ name: '', price: '', description: '', image: null, category: '' });
-      fetchProducts();
+      fetchProducts(); // Refresh product list
     } catch (err) {
       setMessage('Error creating product');
     }
   };
 
+  // Handle edit button click: populate form and show modal
   const handleEdit = (product: any) => {
     setEditProduct(product);
     setForm({
@@ -94,6 +111,7 @@ const Dashboard: React.FC = () => {
     setShowModal(true);
   };
 
+  // Handle form submission for updating an existing product
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage('');
@@ -113,12 +131,13 @@ const Dashboard: React.FC = () => {
       setForm({ name: '', price: '', description: '', image: null, category: '' });
       setEditProduct(null);
       setShowModal(false);
-      fetchProducts();
+      fetchProducts(); // Refresh product list
     } catch (err) {
       setMessage('Error updating product');
     }
   };
 
+  // Handle product deletion
   const handleDelete = async (id: string) => {
     try {
       await axios.delete(`http://localhost:3000/products/${id}`);

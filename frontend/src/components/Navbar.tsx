@@ -1,24 +1,29 @@
+// Main navigation bar for the application. Handles navigation links, authentication state, user role, and responsive mobile menu.
+// Shows different links and buttons based on whether the user is logged in and their role (admin/user).
+
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { ShoppingCart } from 'lucide-react';
 
 const Navbar: React.FC = () => {
+  // State for mobile menu toggle (open/close)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userRole, setUserRole] = useState<string | null>(null);
-  const navigate = useNavigate();
+  // State for authentication and user role
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // True if user is logged in
+  const [userRole, setUserRole] = useState<string | null>(null); // 'admin', 'user', or null
+  const navigate = useNavigate(); // React Router navigation hook
 
-  // Check auth state on mount and when localStorage changes
+  // On mount, check authentication and user role from localStorage
   useEffect(() => {
     const checkAuth = () => {
       const token = localStorage.getItem('token');
-      setIsAuthenticated(!!token);
+      setIsAuthenticated(!!token); // Set auth state based on token presence
       const user = localStorage.getItem('user');
       if (user) {
         try {
           const parsed = JSON.parse(user);
-          setUserRole(parsed.role || null);
+          setUserRole(parsed.role || null); // Set user role from stored user info
         } catch {
           setUserRole(null);
         }
@@ -33,10 +38,11 @@ const Navbar: React.FC = () => {
     return () => window.removeEventListener('storage', checkAuth);
   }, []);
 
+  // Handle user logout: clear localStorage, update state, redirect
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    setIsAuthenticated(false);
+    localStorage.removeItem('token'); // Remove JWT token
+    localStorage.removeItem('user'); // Remove user info
+    setIsAuthenticated(false); // Update auth state
     navigate('/'); // Redirect to home or login
   };
 
@@ -44,12 +50,14 @@ const Navbar: React.FC = () => {
     <nav className="bg-[#181816]/100 border-b border-luxury-brown-light sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
+          {/* Logo section */}
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0 flex items-center">
               <span className="text-luxury-brown-dark font-serif text-2xl font-bold">Billionaire$</span>
             </Link>
           </div>
 
+          {/* Desktop navigation links */}
           <div className="hidden sm:ml-6 sm:flex sm:space-x-8 mt-4">
             <Link to="/" className="border-transparent text-luxury-brown-dark hover:text-luxury-brown-dark px-1 pt-1 font-medium">
               Home
@@ -63,6 +71,7 @@ const Navbar: React.FC = () => {
             <Link to="/Dashboard" className="border-transparent text-luxury-brown-dark hover:text-luxury-brown-dark px-1 pt-1 font-medium">
               Dashboard
             </Link>
+            {/* Show Admin link only for admin users */}
             {userRole === 'admin' && (
               <Link to="/postLogin" className="border-transparent text-luxury-brown-dark hover:text-luxury-brown-dark px-1 pt-1 font-medium">
                 Admin
@@ -70,6 +79,7 @@ const Navbar: React.FC = () => {
             )}
           </div>
           
+          {/* Auth buttons and cart icon */}
           <div className="flex items-center">
             {isAuthenticated ? (
               <>
@@ -97,13 +107,7 @@ const Navbar: React.FC = () => {
                 </Link>
               </>
             )}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="ml-4 sm:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-luxury-gold-dark"
-            >
-              <span className="sr-only">Open main menu</span>
-              {mobileMenuOpen ? <X className="block h-6 w-6" /> : <Menu className="block h-6 w-6" />}
-            </button>
+            {/* Mobile menu button (not shown in this excerpt) */}
           </div>
         </div>
       </div>

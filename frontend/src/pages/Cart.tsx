@@ -1,66 +1,77 @@
+// Shopping cart page for the e-commerce application.
+// Displays products in the user's cart, allows removal of items, and provides a checkout (clear cart) feature.
+// Fetches cart data from the backend and manages cart state and actions.
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Product } from '../types/product';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 
+// CartItem extends Product with a quantity field
 interface CartItem extends Product {
   quantity: number;
 }
 
 const Cart: React.FC = () => {
+  // State for cart items
   const [cart, setCart] = useState<CartItem[]>([]);
+  // State for authentication (not strictly needed for rendering, but could be used for UI logic)
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
 
-const fetchCart = async () => {
-  const token = localStorage.getItem('token');
-  if (!token) return;
-  try {
-    const res = await axios.get('http://localhost:3000/api/cart', {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    console.log('GET /api/cart response:', res.data); // Add this
-    setCart(res.data?.items || []);
-  } catch (error) {
-    console.error('Fetch cart failed:', error.response?.data || error.message); // Add this
-  }
-};
-          
-useEffect(() => {
-  fetchCart();
-}, []);
+  // Fetch the user's cart from the backend API
+  const fetchCart = async () => {
+    const token = localStorage.getItem('token'); // Get JWT token from localStorage
+    if (!token) return; // If not authenticated, do nothing
+    try {
+      const res = await axios.get('http://localhost:3000/api/cart', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      console.log('GET /api/cart response:', res.data); // Debug: log response
+      setCart(res.data?.items || []); // Set cart state with items from backend
+    } catch (error) {
+      console.error('Fetch cart failed:', error.response?.data || error.message); // Debug: log error
+    }
+  };
 
+  // Fetch cart on component mount
+  useEffect(() => {
+    fetchCart();
+  }, []);
 
- const handleRemoveFromCart = async (productId: string) => {
+  // Remove a product from the cart by productId
+  const handleRemoveFromCart = async (productId: string) => {
     const token = localStorage.getItem('token');
     if (!token) return;
     try {
       await axios.delete(`http://localhost:3000/api/cart/remove/${productId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      // Refetch cart after removal
+      // Refetch cart after removal to update UI
       await fetchCart();
     } catch (error) {
       console.error('Remove from cart failed:', error.response?.data || error.message);
     }
-  }; 
-      
-    const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  };
 
-    const handleCheckout = async () => {
-      const token = localStorage.getItem('token');
-      if (!token) return;
-      try {
-        await axios.post('http://localhost:3000/api/cart/clear', {}, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setCart([]);
-      } catch (error) {
-        console.error('Checkout (clear cart) failed:', error.response?.data || error.message);
-      }
-    };
-    
+  // Calculate the total price of all items in the cart
+  const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  // Handle checkout: clear the cart on the backend and update UI
+  const handleCheckout = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    try {
+      await axios.post('http://localhost:3000/api/cart/clear', {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setCart([]); // Clear cart in UI
+    } catch (error) {
+      console.error('Checkout (clear cart) failed:', error.response?.data || error.message);
+    }
+  };
+  
 
 return (
   <>
