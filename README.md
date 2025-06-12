@@ -110,7 +110,8 @@ The `Conceptual Process` is the set of actions, activities and research that was
 
 ### Wireframes
 
-![Wireframes](./readmeImages/Wireframes)
+![Wireframe1](./readmeImages/Wireframe1.png)
+![Wireframe1](./readmeImages/Wireframe2.png)
 
 
 ## Development Process
