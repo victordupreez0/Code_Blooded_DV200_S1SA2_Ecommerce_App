@@ -11,7 +11,7 @@ const productsRouter = require('./routes/products.js'); // Import product-relate
 const authRouter = require('./routes/auth.js'); // Import authentication routes
 
 // Connect to MongoDB Atlas using the connection string from environment variables
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGODB_URI)
   .then(async () => {
     console.log('Connected to MongoDB Atlas');
 
